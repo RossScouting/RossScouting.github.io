@@ -14,15 +14,13 @@
 	<p>Please sign up for at least three shifts by the end of this weekend. This is on a first come, first serve basis. Anyone who doesn't sign up for at least three shifts, and isn't on drive team or similar, will be assigned shifts that they won't get to pick. Any leftover shifts will be also assigned.</p>
 	<button id="button1">Scouting Input</button>
 	<button id="button2">Scouting Leaderboard</button>
-	<button id="button3">Scouting Game</button>
-	<button id="button4">Scouting SignUp</button>
+	<button id="button3">Statbotics</button>
 	<div id="iframe-container"></div>
 	<script>
 		// Get references to the buttons and iframe container
 		const button1 = document.getElementById("button1");
 		const button2 = document.getElementById("button2");
 		const button3 = document.getElementById("button3");
-		const button4 = document.getElementById("button4");
 		const iframeContainer = document.getElementById("iframe-container");
 		
 		// Set up event listeners for each button
@@ -33,10 +31,7 @@
 			iframeContainer.innerHTML = '<iframe src="https://script.google.com/macros/s/AKfycbyPPGB6-UIthdM_B22JIXAgkTiecmUgjArhzjqVRjVNVJqKzjsQLhbjlnvJRSLuOLabtQ/exec"></iframe>';
 		});
 		button3.addEventListener("click", function() {
-			iframeContainer.innerHTML = '<iframe src="https://orteil.dashnet.org/cookieclicker/"></iframe>';
-		});
-		button4.addEventListener("click", function() {
-			iframeContainer.innerHTML = '<iframe src="https://www.signupgenius.com/go/10C0945AFAA23ABFCCF8-scouting1"></iframe>';
+			iframeContainer.innerHTML = '<iframe src="https://www.statbotics.io/team/3201"></iframe>';
 		});
 	</script>
 </body>
