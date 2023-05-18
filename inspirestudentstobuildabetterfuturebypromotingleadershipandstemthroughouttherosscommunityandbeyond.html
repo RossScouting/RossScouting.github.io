@@ -21,6 +21,12 @@ function startGame() {
     myScore = new component("30px", "Consolas", "white", 280, 40, "text");
     myGameArea.start();
 }
+    
+function reStartGame() {
+    myGameArea.stop();
+    myGameArea.clear();
+    startGame();
+}
 
 var myGameArea = {
     canvas : document.createElement("canvas"),
@@ -143,7 +149,7 @@ function clearmove() {
   <button onmousedown="moveleft()" onmouseup="clearmove()" ontouchstart="moveleft()">LEFT</button>
   <button onmousedown="moveright()" onmouseup="clearmove()" ontouchstart="moveright()">RIGHT</button><br><br>
   <button onmousedown="movedown()" onmouseup="clearmove()" ontouchstart="movedown()">DOWN</button><br><br>
-  <button onmousedown="startGame()" onmouseup="clearmove()" ontouchstart="startGame()">RESET</button>
+  <button onmousedown="reStartGame()" onmouseup="clearmove()" ontouchstart="reStartGame()">RESET</button>
 </div>
 
 <p style="font-size: 1px;">Credit to W3 Schools for Information on how to make this.</p>
