@@ -15,11 +15,17 @@ canvas {
 var myGamePiece;
 var myObstacles = [];
 var myScore;
+var level;
+var levelSpeed;
+var levelScore;
 
 function startGame() {
     myGamePiece = new component(30, 30, "red", 10, 120);
     myScore = new component("30px", "Consolas", "white", 280, 40, "text");
     myGameArea.start();
+    levelSpeed = -1;
+    level = 1;
+    levelScore = 0;
 }
     
 function reStartGame() {
@@ -106,7 +112,7 @@ function updateGameArea() {
         myObstacles.push(new component(10, x - height - gap, "purple", x, height + gap));
     }
     for (i = 0; i < myObstacles.length; i += 1) {
-        myObstacles[i].speedX = -1;
+        myObstacles[i].speedX = levelSpeed;
         myObstacles[i].newPos();
         myObstacles[i].update();
     }
@@ -114,6 +120,10 @@ function updateGameArea() {
     myScore.update();
     myGamePiece.newPos();    
     myGamePiece.update();
+    levelScore = myGameArea.frameNo;
+    if (levelScore > 1000) {
+        levelSpeed = levelScore/1000;
+    }
 }
 
 function everyinterval(n) {
