@@ -18,6 +18,8 @@ var myScore;
 var level;
 var levelSpeed;
 var levelScore;
+var playerSpeedPlus;
+var playerSpeedMinus;
 
 function startGame() {
     myGamePiece = new component(30, 30, "red", 10, 120);
@@ -26,6 +28,8 @@ function startGame() {
     levelSpeed = -1;
     level = 1;
     levelScore = 0;
+    playerSpeedPlus = 1;
+    playerSpeedMinus = -1;
 }
     
 function reStartGame() {
@@ -132,19 +136,19 @@ function everyinterval(n) {
 }
 
 function moveup() {
-    myGamePiece.speedY = -1; 
+    myGamePiece.speedY = playerSpeedMinus; 
 }
 
 function movedown() {
-    myGamePiece.speedY = 1; 
+    myGamePiece.speedY = playerSpeedPlus; 
 }
 
 function moveleft() {
-    myGamePiece.speedX = -1; 
+    myGamePiece.speedX = playerSpeedMinus; 
 }
 
 function moveright() {
-    myGamePiece.speedX = 1; 
+    myGamePiece.speedX = playerSpeedPlus; 
 }
 
 function clearmove() {
@@ -167,6 +171,18 @@ function getDirection(event) {
   }
   if (key == "ArrowRight") {
       moveright();
+  }
+  if (key == "W") {
+      playerSpeedPlus = playerSpeedPlus + 1;
+      playerSpeedMinus = playerSpeedMinus - 1;
+  }
+  if (key == "S") {
+      playerSpeedPlus = playerSpeedPlus - 1;
+      playerSpeedMinus = playerSpeedMinus +1;
+  }
+  if (key == "R") {
+      playerSpeedPlus = 1;
+      playerSpeedMinus = -1;
   }
 }
 </script>
