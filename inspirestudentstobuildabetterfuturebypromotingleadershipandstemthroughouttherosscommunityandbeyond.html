@@ -141,6 +141,24 @@ function clearmove() {
     myGamePiece.speedX = 0; 
     myGamePiece.speedY = 0; 
 }
+    
+function getDirection(event) {
+  let key = event.key;
+  document.getElementById("testlog").innerHTML = "The key was: " + key;
+  
+  if (key == "ArrowUp") {
+      moveup();
+  }
+  if (key == "ArrowDown") {
+      movedown();
+  }
+  if (key == "ArrowLeft") {
+      moveleft();
+  }
+  if (key == "ArrowRight") {
+      moveright();
+  }
+}
 </script>
 <div style="text-align:center;width:480px;">
   <button onmousedown="moveup()" onmouseup="clearmove()" ontouchstart="moveup()">UP</button><br><br>
@@ -150,6 +168,12 @@ function clearmove() {
   <button onmousedown="reStartGame()" onmouseup="clearmove()" ontouchstart="reStartGame()">RESET</button>
 </div>
 
+<p>Enter the input field to use the arrow keys as controls.</p>
+
+<input type="text" size="1" onkeydown="getDirection(event)" onkeyup="clearmove()">
+
+<p id="testlog"></p>
+    
 <p style="font-size: 1px;">Credit to W3 Schools for Information on how to make this.</p>
 </body>
 </html>
