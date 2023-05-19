@@ -1,1 +1,38 @@
-
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Ross Rambotics Scouting</title>
+	<style>
+		iframe {
+			width: 100%;
+			height: 625px;
+		}
+	</style>
+</head>
+<body style="background-color: white; color: black;">
+	<h1 style="color: black;">Ross Rambotics Scouting</h1>
+	<p>There is no offcial sign-up for scouting for this tournament, this will instead be on an honor system. If you are able to scout, please communicate with the other scouts to determine which robot you are scouting. Even though many people don't like scouting, it is important for our team that you scout, so we know the statistics of each robot at our tournament. If you forget a match or are unable to scout your robot please fill out the missed scouting form.</p>
+	<button id="button1">Scouting Input</button>
+	<button id="button2">Scouting Leaderboard</button>
+	<button id="button3">Missed Scouting Form</button>
+	<div id="iframe-container"></div>
+	<script>
+		// Get references to the buttons and iframe container
+		const button1 = document.getElementById("button1");
+		const button2 = document.getElementById("button2");
+		const button3 = document.getElementById("button3");
+		const iframeContainer = document.getElementById("iframe-container");
+		
+		// Set up event listeners for each button
+		button1.addEventListener("click", function() {
+			iframeContainer.innerHTML = '<iframe src="https://script.google.com/macros/s/AKfycbwmZwemmVSXcdHWJf1r4JVRGK60Tlus1MS4HC0MYqeSzrc73ezuAL40KPyevIjQMlhWOw/exec"></iframe>';
+		});
+		button2.addEventListener("click", function() {
+			iframeContainer.innerHTML = '<iframe src="https://script.google.com/macros/s/AKfycbyUyCEDN1PyyqBds-u9g2yPz7z0Pd6SqHOj7NxZQtHjEiRCpr6OWjclTeu-PhxPnSY38g/exec"></iframe>';
+		});
+		button3.addEventListener("click", function() {
+			iframeContainer.innerHTML = '<iframe src="https://docs.google.com/forms/d/e/1FAIpQLSd5g3rvSkEyfDpPCKcA68DvUNMMWz_gpaLBmWNQoCfHhAErEQ/viewform?usp=sf_link"></iframe>';
+		});
+	</script>
+</body>
+</html>
