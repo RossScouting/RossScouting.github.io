@@ -17,6 +17,7 @@ var myObstacles = [];
 var myScore;
 var level;
 var levelSpeed;
+var levelInterval;
 var levelScore;
 var playerSpeedPlus;
 var playerSpeedMinus;
@@ -26,6 +27,7 @@ function startGame() {
     myScore = new component("30px", "Consolas", "white", 280, 40, "text");
     myGameArea.start();
     levelSpeed = -1;
+    levelInterval = 150;
     level = 1;
     levelScore = 0;
     playerSpeedPlus = 1;
@@ -104,7 +106,7 @@ function updateGameArea() {
     }
     myGameArea.clear();
     myGameArea.frameNo += 1;
-    if (myGameArea.frameNo == 1 || everyinterval(150)) {
+    if (myGameArea.frameNo == 1 || everyinterval(levelInterval)) {
         x = myGameArea.canvas.width;
         minHeight = 20;
         maxHeight = 200;
@@ -127,6 +129,9 @@ function updateGameArea() {
     levelScore = myGameArea.frameNo;
     if (levelScore > 1000) {
         levelSpeed = levelScore/-1000;
+    }
+    if (levelInterval > 0) {
+        levelInterval = levelInterval - 0.1;
     }
 }
 
