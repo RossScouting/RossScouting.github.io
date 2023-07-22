@@ -29,6 +29,18 @@
 		nav img{
 			width: 150px;
 		}
+		nav img::after{
+			content: '';
+			width: 0%;
+			height: 2px;
+			background: #ffee00;
+			display: block;
+			margin: auto;
+			transition: 0.5s;
+		}
+		nav img:hover::after{
+			width: 100%;
+		}
 		.nav-links{
 			flex: 1;
 			text-align: right;
@@ -83,6 +95,7 @@
 			background: transparent;
 			position: relative;
 			cursor: pointer;
+			transition: 1s;
 		}
 		.big-link:hover{
 			border: 1px solid #f44336;
