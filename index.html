@@ -114,6 +114,7 @@
 				display: block;
 			}
 			.nav-links{
+				display: none;
 				position: absolute;
 				background: #f44336;
 				height: 100vh;
@@ -154,7 +155,7 @@
 			<i class="fa fa-bars" onclick="showMenu()"></i>
 		</nav>
 		<div class="text-box">
-			<h1>Ross Rambotics Scouting</h1>
+			<h1>Ross Rambotics Scouting<br>TEST VERSION</h1>
 			<p>Scouting has been made simple, easy, and nice-looking. You have all the reason to scout, it helps out the team, a lot.</p>
 			<a href="classic.html" class="big-link">Access the Scouting System</a>
 		</div>
@@ -164,10 +165,12 @@
 
 		function showMenu(){
 			navLinks.style.right = "0";
+			navLinks.style.display = "block";
 		}
 
 		function hideMenu(){
 			navLinks.style.right = "-200px";
+			navLinks.style.display = "none";
 		}
 	</script>
 </body>
