@@ -6,6 +6,7 @@
 	<link rel="preconnect" href="https://fonts.googleapis.com">
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 	<link href="https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,100;0,300;0,500;0,700;0,900;1,100;1,300;1,500;1,700;1,900&display=swap" rel="stylesheet">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.1/css/fontawesome.min.css" integrity="sha384-QYIZto+st3yW+o8+5OHfT6S482Zsvz2WfOzpFSXMF9zqeLcFV0/wlZpMtyFcZALm" crossorigin="anonymous">
 	<style>
 		*{
 			margin: 0;
@@ -102,6 +103,9 @@
 			background: #f44336;
 			transition: 1s;
 		}
+		nav .fa{
+			display: none;
+		}
 		@media(max-width: 700px){
 			.text-box h1{
 				font-size: 20px;
@@ -115,9 +119,20 @@
 				height: 100vh;
 				width: 200px;
 				top: 0;
-				right: 0;
+				right: -200px;
 				text-align: left;
 				z-index: 2;
+				transition: 1s;
+			}
+			nav .fa{
+				display: block;
+				color: #fff;
+				margin: 10px;
+				font-size: 22px;
+				cursor: pointer;
+			}
+			.nav-links ul{
+				padding: 30px;
 			}
 		}
 	</style>
@@ -126,7 +141,8 @@
 	<section class="header">
 		<nav>
 			<a href="classic.html" class="logo-link"><img src="logo.png"></a>
-			<div class="nav-links">
+			<div class="nav-links" id="navLinks">
+				<i class="fa fa-times" onclick="hideMenu()"></i>
 				<ul>
 					<li><a href="">HOME</a></li>
 					<li><a href="">CLASSIC</a></li>
@@ -135,6 +151,7 @@
 					<li><a href="">INSPIRE</a></li>
 				</ul>
 			</div>
+			<i class="fa fa-bars" onclick="showMenu()"></i>
 		</nav>
 		<div class="text-box">
 			<h1>Ross Rambotics Scouting</h1>
@@ -142,5 +159,16 @@
 			<a href="" class="big-link">Access the Scouting System</a>
 		</div>
 	</section>
+	<script>
+		var navLinks = document.getElementById("navLinks");
+
+		function showMenu(){
+			navLinks.style.right = "0";
+		}
+
+		function hideMenu(){
+			navLinks.style.right = "-200px";
+		}
+	</script>
 </body>
 </html>
