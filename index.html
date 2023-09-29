@@ -173,7 +173,7 @@
 			  var seconds = Math.floor((distance % (1000 * 60)) / 1000);
 			
 			  document.getElementById("countdown").innerHTML = days + " days, " + hours + " hours, "
-			  + minutes + " minutes, and " + seconds + " seconds, till Kickoff";
+			  + minutes + " minutes, and " + seconds + " seconds, till FRC 2024 Kickoff!";
 			
 			  if (distance < 0) {
 			    clearInterval(x);
@@ -181,28 +181,6 @@
 			  }
 			}, 1000);
 			</script>
-			
-			<!--<script>
-				var targetDate = newDate("Jan 6, 2024 12:00:00").getTime();
-
-				var x = setInterval(function(){
-					var now = new Date().getTime();
-					var distance = targetDate - now;
-					var days = Math.floor(distance / (1000*60*60*24));
-					var hours = Math.floor((distance % (1000*60*60*24)) / (1000*60*60));
-					var minutes = Math.floor((distance % (1000*60*60)) / (1000 * 60));
-					var seconds = Math.floor((distance % (1000*60)) / 1000);
-
-					document.getElementById("countdown").innerHTML = days + "d " + hours + "h " + minutes + "m " + seconds + "s till FRC 2024 Kickoff!";
-
-					if(distance < 0){
-						clearInterval(x);
-						document.getElementById("countdown").innerHTML = "Expired";
-					}
-					
-				}, 1000);
-				
-			</script> -->
 		</div>
 	</section>
 	<script>
