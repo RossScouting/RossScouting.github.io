@@ -159,7 +159,30 @@
 			<p>Scouting has been made simple, easy, and nice-looking. You have all the reason to scout; it helps out the team a lot.</p>
 			<a href="scouting.html" class="big-link">Access the Scouting System</a>
 			<p style="Font-size:24px;" id="countdown"></p>
+
 			<script>
+			var targetDate = new Date("Jan 5, 2024 15:37:25").getTime();
+			
+			var x = setInterval(function() {
+			
+			  var now = new Date().getTime();
+			  var distance = targetDate - now;
+			  var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+			  var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+			  var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+			  var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+			
+			  document.getElementById("countdown").innerHTML = days + "d " + hours + "h "
+			  + minutes + "m " + seconds + "s ";
+			
+			  if (distance < 0) {
+			    clearInterval(x);
+			    document.getElementById("countdown").innerHTML = "EXPIRED";
+			  }
+			}, 1000);
+			</script>
+			
+			<!--<script>
 				var targetDate = newDate("Jan 6, 2024 12:00:00").getTime();
 
 				var x = setInterval(function(){
@@ -179,7 +202,7 @@
 					
 				}, 1000);
 				
-			</script>
+			</script> -->
 		</div>
 	</section>
 	<script>
