@@ -161,7 +161,7 @@
 			<p style="Font-size:24px;" id="countdown"></p>
 
 			<script>
-			var targetDate = new Date("Jan 6, 2024 12:00:00").getTime();
+			var targetDate = new Date("Feb 28, 2024 12:00:00").getTime();
 			
 			var x = setInterval(function() {
 			
@@ -173,7 +173,7 @@
 			  var seconds = Math.floor((distance % (1000 * 60)) / 1000);
 			
 			  document.getElementById("countdown").innerHTML = days + " days, " + hours + " hours, "
-			  + minutes + " minutes, and " + seconds + " seconds, till FRC 2024 Kickoff!";
+			  + minutes + " minutes, and " + seconds + " seconds, till Week 1!";
 			
 			  if (distance < 0) {
 			    clearInterval(x);
