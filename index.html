@@ -171,13 +171,39 @@
 			  var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
 			  var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
 			  var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+			  var dayLabel;
+			  var hourLabel;
+			  var minuteLabel;
+			  var secondLabel;
+
+			  if (days == 1) {
+			    dayLabel = " day, ";
+			  } else {
+			    dayLabel = " days, ";
+			  }
+			  if (hours == 1) {
+			    hourLabel = " hour, ";
+			  } else {
+			    hourLabel = " hours, ";
+			  }
+			  if (minutes == 1) {
+			    minuteLabel = " minute, and ";
+			  } else {
+			    minuteLabel = " minutes, and ";
+			  }
+			  if (seconds == 1) {
+			    secondLabel = " second, ";
+			  } else {
+			    secondLabel = " seconds, ";
+			  }
 			
-			  document.getElementById("countdown").innerHTML = days + " days, " + hours + " hours, "
-			  + minutes + " minutes, and " + seconds + " seconds, till Week 1!";
+			  document.getElementById("countdown").innerHTML = days + dayLabel + hours + hourLabel
+			  + minutes + minuteLabel + seconds + secondLabel + "till Week 1!";
 			
 			  if (distance < 0) {
 			    clearInterval(x);
-			    document.getElementById("countdown").innerHTML = "EXPIRED";
+			    document.getElementById("countdown").innerHTML = " ";
 			  }
 			}, 1000);
 			</script>
