@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Ross Rambotics Scouting</title>
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,100;0,300;0,500;0,700;0,900;1,100;1,300;1,500;1,700;1,900&display=swap" rel="stylesheet">
+	<script src="https://kit.fontawesome.com/b5dbcb3331.js" crossorigin="anonymous"></script>
+	<style>
+		*{
+			margin: 0;
+			padding: 0;
+			font-family: 'Kanit', sans-serif;
+		}
+		.header{
+			min-height: 100vh;
+			width: 100%;
+			background-image: linear-gradient(rgba(4,9,30,0.7),rgba(4,9,30,0.7)),url(atlas-climb.jpg);
+			background-position: center;
+			background-size: cover;
+			position: relative;
+		}
+		nav{
+			display: flex;
+			padding: 2% 6%;
+			justify-content: space-between;
+			align-items: center;
+			position: sticky;
+			top: 0;
+			z-index: 4028;
+		}
+		nav img{
+			width: 150px;
+		}
+		.logo-link::after{
+			content: '';
+			width: 0%;
+			height: 2px;
+			background: #ffee00;
+			display: block;
+			margin: auto;
+			transition: 0.5s;
+		}
+		.logo-link:hover::after{
+			width: 100%;
+		}
+		.nav-links{
+			flex: 1;
+			text-align: right;
+		}
+		.nav-links ul li{
+			list-style: none;
+			display: inline-block;
+			padding: 8px 12px;
+			position: relative;
+		}
+		.nav-links ul li a{
+			color: #fff;
+			text-decoration: none;
+			font-size: 13px;
+		}
+		.nav-links ul li::after{
+			content: '';
+			width: 0%;
+			height: 2px;
+			background: #f44336;
+			display: block;
+			margin: auto;
+			transition: 0.5s;
+		}
+		.nav-links ul li:hover::after{
+			width: 100%;
+		}
+		.text-box{
+			width: 90%;
+			color: #fff;
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			transform: translate(-50%,-50%);
+			text-align: center;
+		}
+		.text-box h1{
+			font-size: 62px;
+		}
+		.text-box p{
+			margin: 10px 0 40px;
+			font-size: 14px;
+			color: #fff;
+		}
+		.big-link{
+			display: inline-block;
+			text-decoration: none;
+			color: #fff;
+			border: 1px solid #fff;
+			padding: 12px 34px;
+			font-size: 13px;
+			background: transparent;
+			position: relative;
+			cursor: pointer;
+			transition: 1s;
+		}
+		.big-link:hover{
+			border: 1px solid #f44336;
+			background: #f44336;
+			transition: 1s;
+		}
+		nav .fa{
+			display: none;
+		}
+		@media(max-width: 700px){
+			.text-box h1{
+				font-size: 20px;
+			}
+			.nav-links ul li{
+				display: block;
+			}
+			.nav-links{
+				display: none;
+				position: absolute;
+				background: #f44336;
+				height: 100vh;
+				width: 200px;
+				top: 0;
+				right: -200px;
+				text-align: left;
+				z-index: 2;
+				transition: 1s;
+			}
+			nav .fa{
+				display: block;
+				color: #fff;
+				margin: 10px;
+				font-size: 22px;
+				cursor: pointer;
+			}
+			.nav-links ul{
+				padding: 30px;
+			}
+		}
+	</style>
+</head>
+<body>
+	<section class="header">
+		<nav>
+			<a href="index.html" class="logo-link"><img src="logo.png"></a>
+			<div class="nav-links" id="navLinks">
+				<i class="fa fa-times" onclick="moveMenuOut()"></i>
+				<ul>
+					<li><a href="index.html">HOME</a></li>
+					<li><a href="input.html">SCOUTING</a></li>
+					<li><a href="leaderboard.html">LEADERBOARD</a></li>
+					<li><a href="tracker.html">TRACKER</a></li>
+					<li><a href="specinput.html">AUTO-START</a></li>
+					<li><a href="auto.html">AUTO-NOTE</a></li>
+				</ul>
+			</div>
+			<i class="fa fa-bars" onclick="showMenu()"></i>
+		</nav>
+		<div class="text-box">
+			<h1>Ross Rambotics Scouting</h1>
+			<p>Scouting has been made simple, easy, and nice-looking. You have all the reason to scout; it helps out the team a lot.</p>
+			<a href="input.html" class="big-link">Access the Scouting System</a>
+			<p style="Font-size:24px;" id="countdown"></p>
+
+			<script>
+			var targetDate = new Date("Mar 17, 2024 15:45:00").getTime();
+			
+			var x = setInterval(function() {
+			
+			  var now = new Date().getTime();
+			  var distance = targetDate - now;
+			  var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+			  var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+			  var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+			  var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+			  var dayLabel;
+			  var hourLabel;
+			  var minuteLabel;
+			  var secondLabel;
+
+			  if (days == 1) {
+			    dayLabel = " day, ";
+			  } else {
+			    dayLabel = " days, ";
+			  }
+			  if (hours == 1) {
+			    hourLabel = " hour, ";
+			  } else {
+			    hourLabel = " hours, ";
+			  }
+			  if (minutes == 1) {
+			    minuteLabel = " minute, and ";
+			  } else {
+			    minuteLabel = " minutes, and ";
+			  }
+			  if (seconds == 1) {
+			    secondLabel = " second, ";
+			  } else {
+			    secondLabel = " seconds, ";
+			  }
+			
+			  document.getElementById("countdown").innerHTML = days + dayLabel + hours + hourLabel
+			  + minutes + minuteLabel + seconds + secondLabel + "till AI Revolt!";
+			
+			  if (distance < 0) {
+			    clearInterval(x);
+			    document.getElementById("countdown").innerHTML = " ";
+			  }
+			}, 1000);
+			</script>
+		</div>
+	</section>
+	<script>
+		var navLinks = document.getElementById("navLinks");
+
+		function showMenu(){
+			navLinks.style.display = "block";
+			setTimeout(moveMenuIn, 10);
+		}
+
+		function moveMenuIn(){
+			navLinks.style.right = "0";
+		}
+
+		function moveMenuOut(){
+			navLinks.style.right = "-200px";
+			setTimeout(hideMenu, 1000);
+		}
+
+		function hideMenu(){
+			navLinks.style.display = "none";
+		}
+	</script>
+</body>
+</html>
