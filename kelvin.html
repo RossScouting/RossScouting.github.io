@@ -163,8 +163,20 @@
 			<p>Scouting has been made simple, easy, and nice-looking. You have all the reason to scout; it helps out the team a lot.</p>
 			<a href="input.html" class="big-link">Access the Scouting System</a>
 			<p style="Font-size:24px;" id="countdown"></p>
+			<p></p>
+			<input type="text" id="kelvinin" onkeydown="calcKelvin()">
+			<p id="kelvinout">Simple: N/A | Exact: N/A</p>
 
 			<script>
+			function calcKelvin() {
+				var cel = document.getElementById("kelvinin").value;
+				var kel = cel + 273;
+				var exkel = kel + 0.15;
+				var text = "Simple: " + kel + " | Exact: " + exkel;
+        			var Paragraph = document.getElementById("kelvinout");
+       				Paragraph.innerHTML = text;
+			}
+				
 			var targetDate = new Date("Mar 17, 2024 10:45:00").getTime();
 			
 			var x = setInterval(function() {
