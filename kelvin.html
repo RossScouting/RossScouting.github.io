@@ -169,7 +169,8 @@
 
 			<script>
 			function calcKelvin() {
-				var cel = document.getElementById("kelvinin").value;
+				var init = document.getElementById("kelvinin").value;
+				var cel = init * 1;
 				var kel = cel + 273;
 				var exkel = kel + 0.15;
 				var text = "Simple: " + kel + " | Exact: " + exkel;
