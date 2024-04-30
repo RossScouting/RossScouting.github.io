@@ -168,9 +168,10 @@
 			<p id="kelvinout">Simple: N/A | Exact: N/A</p>
 
 			<script>
+			setInterval(calcKelvin, 1);
 			function calcKelvin() {
-				console.log('BeforeDelay');
-				setTimeout(() => {  console.log('AfterDelay'); }, 100);
+				//console.log('BeforeDelay');
+				//setTimeout(() => {  console.log('AfterDelay'); }, 100);
 				var init = document.getElementById("kelvinin").value;
 				var cel = init * 1;
 				var kel = cel + 273;
