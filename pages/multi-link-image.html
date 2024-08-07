@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Ross Rambotics Scouting</title>
+</head>
+<body>
+  <a href="../index.html">Back to safety</a>
+  <p>
+    X: <span id="mousex"></span> Y: <span id="mousey"></span>
+  </p>
+  <script>
+    window.addEventListener('cursorcoords', function (e) {
+        document.getElementById('mousex').textContent = e.x;
+        document.getElementById('mousey').textContent = e.y;
+    })
+  </script>
+</body>
+</html>
+
