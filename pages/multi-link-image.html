@@ -9,7 +9,7 @@
     X: <span id="mousex"></span> Y: <span id="mousey"></span>
   </p>
   <script>
-    window.addEventListener('cursorcoords', function (e) {
+    window.addEventListener('mousemove', function (e) {
         document.getElementById('mousex').textContent = e.x;
         document.getElementById('mousey').textContent = e.y;
     })
