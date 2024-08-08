@@ -1,30 +1,40 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Ross Rambotics Scouting</title>
+	<title>Ross Rambotics Scouting</title> <!--Tab title-->
     <style>
         body {
-            background-color: #222;
-            color: #eee;
+            background-color: #222; /*Body Background Color*/
+            color: #eee; /*Body Text Color*/
         }
     </style>
 </head>
 <body>
-  <a href="../index.html">Back to safety</a>
-  <p></p>
-  <img src="../images/Field24.png" alt="field" usemap="#fieldmap">
-  <map name="fieldmap">
-    <area shape="circle" coords="455, 55, 20" alt="school" href="../index.html"> <!---index for testing purposes-->
-    <area shape="circle" coords="455, 310, 20" alt="google" href="../input.html"> <!---input for testing purposes-->
+  <a href="../index.html">Back to home</a> <!--Link back to home page-->
+  <p></p> <!--Used for Spacing-->
+  <img src="../images/Field24.png" alt="field" usemap="#fieldmap"> <!--Image of the field, 
+  uses the map below-->
+  <map name="fieldmap"> <!--Map for image, clickable areas for 2 notes-->
+    <area shape="circle" coords="455, 55, 20" alt="MidOne" onclick="middleNoteOne()"> 
+    <area shape="circle" coords="455, 310, 20" alt="MidFour" onclick="middleNoteFour()"> 
   </map>
   <p>
-    X: <span id="mousex"></span> Y: <span id="mousey"></span>
+    X: <span id="mousex"></span> Y: <span id="mousey"></span> <!--Used for seeing coordinates of 
+    the cursor. Development feature for mapping. Comment out for final version-->
   </p>
   <script>
-    window.addEventListener('mousemove', function (e) {
-        document.getElementById('mousex').textContent = e.x;
-        document.getElementById('mousey').textContent = e.y;
+    window.addEventListener('mousemove', function (e) { //Detects cursor movement.
+        document.getElementById('mousex').textContent = e.x; //Updates x value
+        document.getElementById('mousey').textContent = e.y; //Updates y value
     })
+    
+    function  middleNoteOne() {
+      alert("Middle Note One"); //Alert when the middle note one is clicked
+    }
+
+    function middleNoteFour() {
+      alert("Middle Note Four"); //Alert when the middle note four is clicked
+    }
   </script>
 </body>
 </html>
