@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Ross Rambotics Scouting</title>
+    <style>
+        .rgbouter {
+            background: linear-gradient(to right, var(--rgb-run));
+            width: 250px;
+            height: 90px;
+            border-radius: 10px;
+            position: relative;
+            z-index: 999;
+            animation: rgbRun 2s linear infinite;
+        }
+
+        @keyframes rgbRun {
+            100%{
+                filter: hue-rotate(360deg);
+            }
+        }
+    </style>
+</head>
+<body>
+  <a href="../index.html">Back to home</a>
+  <div class="rgbouter">
+    <div class="rgbinner">
+        <span>
+            Words and Words
+        </span>
+    </div>
+    <span></span>
+    <span></span>
+  </div>
+</body>
+</html>
