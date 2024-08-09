@@ -7,6 +7,58 @@
             background-color: #222; /*Body Background Color*/
             color: #eee; /*Body Text Color*/
         }
+
+        input[type=button]{ /*General button formatting*/
+			  display: inline-block;
+			  text-decoration: none;
+			  color: #fff;
+			  border: 1px solid #fff;
+			  padding: 24px 68px; /*12px 34px*/
+			  font-size: 13px;
+			  background: transparent;
+			  position: relative;
+			  cursor: pointer;
+			  transition: 1s;
+		  }
+
+      /*Button Hover formatting below*/
+      input[id=b3]:hover{
+			  border: 1px solid #4287f5;
+			  /*background: #4287f5;*/
+			  transition: 1s;
+		  }
+
+      input[id=b2]:hover{
+			  border: 1px solid #4287f5;
+			  /*background: #4287f5;*/
+			  transition: 1s;
+		  }
+
+      input[id=b1]:hover{
+			  border: 1px solid #4287f5;
+			  /*background: #4287f5;*/
+			  transition: 1s;
+		  }
+
+      input[id=r3]:hover{
+			  border: 1px solid red;
+			  /*background: red;*/
+			  transition: 1s;
+		  }
+
+      input[id=r2]:hover{
+			  border: 1px solid red;
+			  /*background: red;*/
+			  transition: 1s;
+		  }
+
+      input[id=r1]:hover{
+			  border: 1px solid red;
+			  /*background: red;*/
+			  transition: 1s;
+		  }
+
+      /*Button Hover formatting Above*/
     </style>
 </head>
 <body>
@@ -31,54 +83,126 @@
     X: <span id="mousex"></span> Y: <span id="mousey"></span> <!--Used for seeing coordinates of 
     the cursor. Development feature for mapping. Comment out for final version-->
   </p>
+    <!--Team Buttons Below-->
+    <input type="button" id="b3" value="B3" onclick="BlueThree()" />
+    <input type="button" id="b2" value="B2" onclick="BlueTwo()" />
+    <input type="button" id="b1" value="B1" onclick="BlueOne()" />
+    <input type="button" id="r3" value="R3" onclick="RedThree()" />
+    <input type="button" id="r2" value="R2" onclick="RedTwo()" />
+    <input type="button" id="r1" value="R1" onclick="RedOne()" />
+    <!--Team Buttons Above-->
   <script>
+    //Define variable for selected team
+    var teamID = "x";
+
     window.addEventListener('mousemove', function (e) { //Detects cursor movement.
         document.getElementById('mousex').textContent = e.x - 10; //Updates x value
         document.getElementById('mousey').textContent = e.y - 50; //Updates y value
     })
     
     function leftNoteOne() {
-      alert("Left Note One"); //Alert when the left note one is clicked
+      alert(teamID + " Left Note One"); //Alert when the left note one is clicked
     }
 
     function leftNoteTwo() {
-      alert("Left Note Two"); //Alert when the left note two is clicked
+      alert(teamID + " Left Note Two"); //Alert when the left note two is clicked
     }
 
     function leftNoteThree() {
-      alert("Left Note Three"); //Alert when the left note three is clicked
+      alert(teamID + " Left Note Three"); //Alert when the left note three is clicked
     }
 
     function middleNoteOne() {
-      alert("Middle Note One"); //Alert when the middle note one is clicked
+      alert(teamID + " Middle Note One"); //Alert when the middle note one is clicked
     }
 
     function middleNoteTwo() {
-      alert("Middle Note Two"); //Alert when the middle note two is clicked
+      alert(teamID + " Middle Note Two"); //Alert when the middle note two is clicked
     }
 
     function middleNoteThree() {
-      alert("Middle Note Three"); //Alert when the middle note three is clicked
+      alert(teamID + " Middle Note Three"); //Alert when the middle note three is clicked
     }
 
     function middleNoteFour() {
-      alert("Middle Note Four"); //Alert when the middle note four is clicked
+      alert(teamID + " Middle Note Four"); //Alert when the middle note four is clicked
     }
 
     function middleNoteFive() {
-      alert("Middle Note Five"); //Alert when the middle note five is clicked
+      alert(teamID + " Middle Note Five"); //Alert when the middle note five is clicked
     }
 
     function  rightNoteOne() {
-      alert("Right Note One"); //Alert when the right note one is clicked
+      alert(teamID + " Right Note One"); //Alert when the right note one is clicked
     }
 
     function  rightNoteTwo() {
-      alert("Right Note Two"); //Alert when the right note two is clicked
+      alert(teamID + " Right Note Two"); //Alert when the right note two is clicked
     }
 
     function rightNoteThree() {
-      alert("Right Note Three"); //Alert when the right note three is clicked
+      alert(teamID + " Right Note Three"); //Alert when the right note three is clicked
+    }
+
+    //Toggle button selection functions:
+    function BlueThree() {
+      teamID = "b3";
+      b1.style.backgroundColor = 'transparent';
+      b2.style.backgroundColor = 'transparent';
+      b3.style.backgroundColor = '#4287f5';
+      r1.style.backgroundColor = 'transparent';
+      r2.style.backgroundColor = 'transparent';
+      r3.style.backgroundColor = 'transparent';
+    }
+
+    function BlueTwo() {
+      teamID = "b2";
+      b1.style.backgroundColor = 'transparent';
+      b2.style.backgroundColor = '#4287f5';
+      b3.style.backgroundColor = 'transparent';
+      r1.style.backgroundColor = 'transparent';
+      r2.style.backgroundColor = 'transparent';
+      r3.style.backgroundColor = 'transparent';
+    }
+
+    function BlueOne() {
+      teamID = "b1";
+      b1.style.backgroundColor = '#4287f5';
+      b2.style.backgroundColor = 'transparent';
+      b3.style.backgroundColor = 'transparent';
+      r1.style.backgroundColor = 'transparent';
+      r2.style.backgroundColor = 'transparent';
+      r3.style.backgroundColor = 'transparent';
+    }
+
+    function RedThree() {
+      teamID = "r3";
+      b1.style.backgroundColor = 'transparent';
+      b2.style.backgroundColor = 'transparent';
+      b3.style.backgroundColor = 'transparent';
+      r1.style.backgroundColor = 'transparent';
+      r2.style.backgroundColor = 'transparent';
+      r3.style.backgroundColor = 'red';
+    }
+
+    function RedTwo() {
+      teamID = "r2";
+      b1.style.backgroundColor = 'transparent';
+      b2.style.backgroundColor = 'transparent';
+      b3.style.backgroundColor = 'transparent';
+      r1.style.backgroundColor = 'transparent';
+      r2.style.backgroundColor = 'red';
+      r3.style.backgroundColor = 'transparent';
+    }
+
+    function RedOne() {
+      teamID = "r1";
+      b1.style.backgroundColor = 'transparent';
+      b2.style.backgroundColor = 'transparent';
+      b3.style.backgroundColor = 'transparent';
+      r1.style.backgroundColor = 'red';
+      r2.style.backgroundColor = 'transparent';
+      r3.style.backgroundColor = 'transparent';
     }
   </script>
 </body>
