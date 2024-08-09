@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Ross Rambotics Scouting</title> <!--Tab title-->
+    <style>
+        body {
+            background-color: #222; /*Body Background Color*/
+            color: #eee; /*Body Text Color*/
+        }
+    </style>
+</head>
+<body>
+  <a href="../index.html">Back to home</a> <!--Link back to home page-->
+  <p></p> <!--Used for Spacing-->
+  <img src="../images/Field24.png" alt="field" usemap="#fieldmap"> <!--Image of the field, 
+  uses the map below-->
+  <map name="fieldmap"> <!--Map for image, clickable areas for 11 notes-->
+    <area shape="circle" coords="170, 85, 20" alt="LefOne" onclick="leftNoteOne()">
+    <area shape="circle" coords="170, 160, 20" alt="LefTwo" onclick="leftNoteTwo()">
+    <area shape="circle" coords="170, 235, 20" alt="LefThree" onclick="leftNoteThree()">
+    <area shape="circle" coords="445, 55, 20" alt="MidOne" onclick="middleNoteOne()">
+    <area shape="circle" coords="445, 140, 20" alt="MidTwo" onclick="middleNoteTwo()">
+    <area shape="circle" coords="445, 225, 20" alt="MidThree" onclick="middleNoteThree()"> 
+    <area shape="circle" coords="445, 310, 20" alt="MidFour" onclick="middleNoteFour()"> 
+    <area shape="circle" coords="445, 395, 20" alt="MidFive" onclick="middleNoteFive()">
+    <area shape="circle" coords="720, 85, 20" alt="RigOne" onclick="rightNoteOne()">
+    <area shape="circle" coords="720, 160, 20" alt="RigTwo" onclick="rightNoteTwo()">
+    <area shape="circle" coords="720, 235, 20" alt="RigThree" onclick="rightNoteThree()">
+  </map>
+  <p>
+    X: <span id="mousex"></span> Y: <span id="mousey"></span> <!--Used for seeing coordinates of 
+    the cursor. Development feature for mapping. Comment out for final version-->
+  </p>
+  <script>
+    window.addEventListener('mousemove', function (e) { //Detects cursor movement.
+        document.getElementById('mousex').textContent = e.x - 10; //Updates x value
+        document.getElementById('mousey').textContent = e.y - 50; //Updates y value
+    })
+    
+    function leftNoteOne() {
+      alert("Left Note One"); //Alert when the left note one is clicked
+    }
+
+    function leftNoteTwo() {
+      alert("Left Note Two"); //Alert when the left note two is clicked
+    }
+
+    function leftNoteThree() {
+      alert("Left Note Three"); //Alert when the left note three is clicked
+    }
+
+    function middleNoteOne() {
+      alert("Middle Note One"); //Alert when the middle note one is clicked
+    }
+
+    function middleNoteTwo() {
+      alert("Middle Note Two"); //Alert when the middle note two is clicked
+    }
+
+    function middleNoteThree() {
+      alert("Middle Note Three"); //Alert when the middle note three is clicked
+    }
+
+    function middleNoteFour() {
+      alert("Middle Note Four"); //Alert when the middle note four is clicked
+    }
+
+    function middleNoteFive() {
+      alert("Middle Note Five"); //Alert when the middle note five is clicked
+    }
+
+    function  rightNoteOne() {
+      alert("Right Note One"); //Alert when the right note one is clicked
+    }
+
+    function  rightNoteTwo() {
+      alert("Right Note Two"); //Alert when the right note two is clicked
+    }
+
+    function rightNoteThree() {
+      alert("Right Note Three"); //Alert when the right note three is clicked
+    }
+  </script>
+</body>
+</html>
+
