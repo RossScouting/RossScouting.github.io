@@ -14,12 +14,15 @@
   <p></p> <!--Used for Spacing-->
   <img src="../images/Field24.png" alt="field" usemap="#fieldmap"> <!--Image of the field, 
   uses the map below-->
-  <map name="fieldmap"> <!--Map for image, clickable areas for 2 notes-->
+  <map name="fieldmap"> <!--Map for image, clickable areas for 8 notes-->
     <area shape="circle" coords="445, 55, 20" alt="MidOne" onclick="middleNoteOne()">
     <area shape="circle" coords="445, 140, 20" alt="MidTwo" onclick="middleNoteTwo()">
     <area shape="circle" coords="445, 225, 20" alt="MidThree" onclick="middleNoteThree()"> 
     <area shape="circle" coords="445, 310, 20" alt="MidFour" onclick="middleNoteFour()"> 
     <area shape="circle" coords="445, 395, 20" alt="MidFive" onclick="middleNoteFive()">
+    <area shape="circle" coords="720, 80, 20" alt="RigOne" onclick="rightNoteOne()">
+    <area shape="circle" coords="720, 155, 20" alt="RigTwo" onclick="rightNoteTwo()">
+    <area shape="circle" coords="720, 230, 20" alt="RigThree" onclick="rightNoteThree()">
   </map>
   <p>
     X: <span id="mousex"></span> Y: <span id="mousey"></span> <!--Used for seeing coordinates of 
@@ -49,6 +52,18 @@
 
     function middleNoteFive() {
       alert("Middle Note Five"); //Alert when the middle note five is clicked
+    }
+
+    function  rightNoteOne() {
+      alert("Right Note One"); //Alert when the right note one is clicked
+    }
+
+    function  rightNoteTwo() {
+      alert("Right Note Two"); //Alert when the right note two is clicked
+    }
+
+    function rightNoteThree() {
+      alert("Right Note Three"); //Alert when the right note three is clicked
     }
   </script>
 </body>
