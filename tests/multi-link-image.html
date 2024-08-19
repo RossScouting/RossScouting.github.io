@@ -100,9 +100,10 @@
   <div class="container">
     <img src="../images/Field24.png" alt="field" usemap="#fieldmap"> <!--Image of the field, 
     uses the map below container div-->
-    <div class="leftNoteOne"><p>B1</p></div>
-    <div class="leftNoteTwo">B2</div>
-    <div class="leftNoteThree">B3</div>
+    <!--Note Text Overlay (3 Notes)-->
+    <div class="leftNoteOne"><p id="lnon"></p></div> 
+    <div class="leftNoteTwo"><p id="lntw"></p></div>
+    <div class="leftNoteThree"><p id="lnth"></p></div>
   </div>
   <map name="fieldmap"> <!--Map for image, clickable areas for 11 notes-->
     <area shape="circle" coords="170, 85, 20" alt="LefOne" onclick="leftNoteOne()">
@@ -140,14 +141,17 @@
     
     function leftNoteOne() {
       alert(teamID + " Left Note One"); //Alert when the left note one is clicked
+      document.getElementById("lnon").innerHTML = teamID;
     }
 
     function leftNoteTwo() {
       alert(teamID + " Left Note Two"); //Alert when the left note two is clicked
+      document.getElementById("lntw").innerHTML = teamID;
     }
 
     function leftNoteThree() {
       alert(teamID + " Left Note Three"); //Alert when the left note three is clicked
+      document.getElementById("lnth").innerHTML = teamID;
     }
 
     function middleNoteOne() {
