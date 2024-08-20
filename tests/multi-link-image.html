@@ -202,6 +202,14 @@
     <input type="button" id="r2" value="R2" onclick="RedTwo()" />
     <input type="button" id="r1" value="R1" onclick="RedOne()" />
     <!--Team Buttons Above-->
+    <p></p> <!--Spacing-->
+    <!--Reset Buttons Below-->
+    <input type="button" id="lun" value="Reset Left" onclick="ResetLeft()"/>
+    <input type="button" id="mun" value="Reset Middle" onclick="ResetMiddle()"/>
+    <input type="button" id="run" value="Reset Right" onclick="ResetRight()"/>
+    <!--Reset buttons above-->
+    <p></p> <!--Spacing-->
+    <input type="button" id="aun" value="Reset All" onclick="ResetAll()"/><!--Reset All Button-->
   <script>
     //Define variable for selected team
     var teamID = "x";
@@ -210,6 +218,44 @@
         document.getElementById('mousex').textContent = e.x - 10; //Updates x value
         document.getElementById('mousey').textContent = e.y - 50; //Updates y value
     })
+
+    //Reset Left Notes
+    function ResetLeft() {
+      document.getElementById("lnon").innerHTML = "";
+      document.getElementById("lntw").innerHTML = "";
+      document.getElementById("lnth").innerHTML = "";
+    }
+
+    //Reset Middle Notes
+    function ResetMiddle() {
+      document.getElementById("mnon").innerHTML = "";
+      document.getElementById("mntw").innerHTML = "";
+      document.getElementById("mnth").innerHTML = "";
+      document.getElementById("mnfo").innerHTML = "";
+      document.getElementById("mnfi").innerHTML = "";
+    }
+
+    //Reset Right Notes
+    function ResetRight() {
+      document.getElementById("rnon").innerHTML = "";
+      document.getElementById("rntw").innerHTML = "";
+      document.getElementById("rnth").innerHTML = "";
+    }
+
+    //Reset All Notes
+    function ResetAll() {
+      document.getElementById("lnon").innerHTML = "";
+      document.getElementById("lntw").innerHTML = "";
+      document.getElementById("lnth").innerHTML = "";
+      document.getElementById("mnon").innerHTML = "";
+      document.getElementById("mntw").innerHTML = "";
+      document.getElementById("mnth").innerHTML = "";
+      document.getElementById("mnfo").innerHTML = "";
+      document.getElementById("mnfi").innerHTML = "";
+      document.getElementById("rnon").innerHTML = "";
+      document.getElementById("rntw").innerHTML = "";
+      document.getElementById("rnth").innerHTML = "";
+    }
     
     function leftNoteOne() {
       //alert(teamID + " Left Note One"); //Alert when the left note one is clicked
