@@ -77,6 +77,10 @@
         padding: 24px 204px;
       }
 
+      input[id=submit]{
+        padding: 24px 204px;
+      }
+
       input[id=lun]:hover{
 			  border: 1px solid red;
 			  background: red;
@@ -100,6 +104,13 @@
 			  background: red;
 			  transition: 1s;
 		  }
+
+      input[id=submit]:hover{
+			  border: 1px solid green;
+			  background: green;
+			  transition: 1s;
+		  }
+
 
       /*Reset Button formatting above*/
 
@@ -253,6 +264,7 @@
     <!--Reset buttons above-->
     <p></p> <!--Spacing-->
     <input type="button" id="aun" value="Reset All" onclick="ResetAll()"/><!--Reset All Button-->
+    <input type="button" id="submit" value="Submit" onclick="ResetAll()"/><!--Test Submit Button-->
   <script>
     //Define variable for selected team
     var teamID = "x";
