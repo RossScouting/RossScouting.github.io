@@ -8,6 +8,10 @@
             color: #eee; /*Body Text Color*/
         }
 
+        .coordview {
+          background-color: #222;
+        }
+
         input[type=button]{ /*General button formatting*/
 			  display: inline-block;
 			  text-decoration: none;
@@ -246,7 +250,7 @@
     <area shape="circle" coords="720, 160, 30" alt="RigTwo" onclick="rightNoteTwo()">
     <area shape="circle" coords="720, 235, 30" alt="RigThree" onclick="rightNoteThree()">
   </map>
-  <p>
+  <p id="coordview">
     X: <span id="mousex"></span> Y: <span id="mousey"></span> <!--Used for seeing coordinates of 
     the cursor. Development feature for mapping. Comment out for final version-->
   </p>
