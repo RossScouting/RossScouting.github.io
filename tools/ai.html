@@ -16,7 +16,7 @@
 		.header{
 			min-height: 100vh;
 			width: 100%;
-			background-image: linear-gradient(rgba(4,9,30,0.7),rgba(4,9,30,0.7)),url(atlas-climb.jpg);
+			background-image: linear-gradient(rgba(4,9,30,0.7),rgba(4,9,30,0.7)),url(images/atlas-climb.jpg);
 			background-position: center;
 			background-size: cover;
 			position: relative;
@@ -144,7 +144,7 @@
 <body>
 	<section class="header">
 		<nav>
-			<a href="index.html" class="logo-link"><img src="logo.png"></a>
+			<a href="index.html" class="logo-link"><img src="images/logo.png"></a>
 			<div class="nav-links" id="navLinks">
 				<i class="fa fa-times" onclick="moveMenuOut()"></i>
 				<ul>
@@ -163,24 +163,8 @@
 			<p>Scouting has been made simple, easy, and nice-looking. You have all the reason to scout; it helps out the team a lot.</p>
 			<a href="input.html" class="big-link">Access the Scouting System</a>
 			<p style="Font-size:24px;" id="countdown"></p>
-			<p></p>
-			<input type="text" id="kelvinin" onkeydown="calcKelvin()">
-			<p id="kelvinout">Simple: N/A | Exact: N/A</p>
 
 			<script>
-			setInterval(calcKelvin, 1);
-			function calcKelvin() {
-				//console.log('BeforeDelay');
-				//setTimeout(() => {  console.log('AfterDelay'); }, 100);
-				var init = document.getElementById("kelvinin").value;
-				var cel = init * 1;
-				var kel = cel + 273;
-				var exkel = kel + 0.15;
-				var text = "Simple: " + kel + " | Exact: " + exkel;
-        			var Paragraph = document.getElementById("kelvinout");
-       				Paragraph.innerHTML = text;
-			}
-				
 			var targetDate = new Date("Mar 17, 2024 10:45:00").getTime();
 			
 			var x = setInterval(function() {
