@@ -16,7 +16,7 @@
 		.header{
 			min-height: 100vh;
 			width: 100%;
-			background-image: linear-gradient(rgba(4,9,30,0.7),rgba(4,9,30,0.7)),url(atlas-climb.jpg);
+			background-image: linear-gradient(rgba(4,9,30,0.7),rgba(4,9,30,0.7)),url(images/atlas-climb.jpg);
 			background-position: center;
 			background-size: cover;
 			position: relative;
@@ -144,7 +144,7 @@
 <body>
 	<section class="header">
 		<nav>
-			<a href="index.html" class="logo-link"><img src="logo.png"></a>
+			<a href="index.html" class="logo-link"><img src="images/logo.png"></a>
 			<div class="nav-links" id="navLinks">
 				<i class="fa fa-times" onclick="moveMenuOut()"></i>
 				<ul>
@@ -165,7 +165,7 @@
 			<p style="Font-size:24px;" id="countdown"></p>
 
 			<script>
-			var targetDate = new Date("Apr 3, 2024 18:00:00").getTime();
+			var targetDate = new Date("Jan 4, 2025 16:00:00").getTime();
 			
 			var x = setInterval(function() {
 			
@@ -203,7 +203,7 @@
 			  }
 			
 			  document.getElementById("countdown").innerHTML = days + dayLabel + hours + hourLabel
-			  + minutes + minuteLabel + seconds + secondLabel + "till Miami Valley Regional!";
+			  + minutes + minuteLabel + seconds + secondLabel + " till Kickoff!";
 			
 			  if (distance < 0) {
 			    clearInterval(x);
