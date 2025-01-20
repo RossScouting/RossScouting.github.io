@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Ross Rambotics Scouting</title> <!--Tab title-->
+    <style>
+        body {
+            background-color: #222; /*Body Background Color*/
+            color: #eee; /*Body Text Color*/
+        }
+
+        p[id=coordview] {
+          color: #222;
+        }
+
+        input[type=button]{ /*General button formatting*/
+			  display: inline-block;
+			  text-decoration: none;
+			  color: #fff;
+			  border: 1px solid #fff;
+			  /*padding: 24px 68px;*/ /*12px 34px*/
+            height: 50px;
+            width: 150px;
+			  font-size: 13px;
+			  background: transparent;
+			  position: relative;
+			  cursor: pointer;
+			  transition: 1s;
+		  }
+
+      /*Button Hover formatting below*/
+      input[id=b3]:hover{
+			  border: 1px solid #4287f5;
+			  /*background: #4287f5;*/
+			  transition: 1s;
+		  }
+
+      input[id=b2]:hover{
+			  border: 1px solid #4287f5;
+			  /*background: #4287f5;*/
+			  transition: 1s;
+		  }
+
+      input[id=b1]:hover{
+			  border: 1px solid #4287f5;
+			  /*background: #4287f5;*/
+			  transition: 1s;
+		  }
+
+      input[id=r3]:hover{
+			  border: 1px solid red;
+			  /*background: red;*/
+			  transition: 1s;
+		  }
+
+      input[id=r2]:hover{
+			  border: 1px solid red;
+			  /*background: red;*/
+			  transition: 1s;
+		  }
+
+      input[id=r1]:hover{
+			  border: 1px solid red;
+			  /*background: red;*/
+			  transition: 1s;
+		  }
+
+      /*Button Hover formatting Above*/
+
+      /*Reset Button Formatting Below*/
+      input[id=bun]{
+        width: 450px;
+      }
+
+      input[id=run]{
+        width: 450px;
+      }
+
+      input[id=aun]{
+        width: 450px;
+      }
+
+      input[id=submit]{
+        width: 450px;
+      }
+
+      input[id=bun]:hover{
+			  border: 1px solid orange;
+			  background: orange;
+			  transition: 1s;
+		  }
+
+      input[id=run]:hover{
+			  border: 1px solid orange;
+			  background: orange;
+			  transition: 1s;
+		  }
+
+      input[id=aun]:hover{
+			  border: 1px solid orange;
+			  background: orange;
+			  transition: 1s;
+		  }
+
+      input[id=submit]:hover{
+			  border: 1px solid green;
+			  background: green;
+			  transition: 1s;
+		  }
+
+
+      /*Reset Button formatting above*/
+
+      /* Container holding the image and the text */
+      .container {
+        position: relative;
+        text-align: center;
+        color: white;
+        font-size: 30px;
+        display: inline-block;
+      }
+
+      /* Left Note One */
+      .redSpotFive {
+        position: absolute;
+        top: 100px;
+        left: 495px;
+        transform: translate(-50%, -50%);
+      }
+
+      /* Left Note Two */
+      .redSpotFour {
+        position: absolute;
+        top: 168.75px;
+        left: 495px;
+        transform: translate(-50%, -50%);
+      }
+
+      /* Left Note Three */
+      .redSpotThree {
+        position: absolute;
+        top: 237.5px;
+        left: 495px;
+        transform: translate(-50%, -50%);
+      }
+
+      /* Blue Spot One */
+      .blueSpotOne {
+        position: absolute;
+        top: 100px;
+        left: 395px;
+        transform: translate(-50%, -50%);
+      }
+
+      /* Blue Spot Two */
+      .blueSpotTwo {
+        position: absolute;
+        top: 168.75px;
+        left: 395px;
+        transform: translate(-50%, -50%);
+      }
+
+      /* Blue Spot Three */
+      .blueSpotThree {
+        position: absolute;
+        top: 237.5px;
+        left: 395px;
+        transform: translate(-50%, -50%);
+      }
+
+      /* Blue Spot Four */
+      .blueSpotFour {
+        position: absolute;
+        top: 306.25px;
+        left: 395px;
+        transform: translate(-50%, -50%);
+      }
+
+      /* Blue Spot Five */
+      .blueSpotFive {
+        position: absolute;
+        top: 375px;
+        left: 395px;
+        transform: translate(-50%, -50%);
+      }
+
+      /* Right Note One */
+      .redSpotTwo {
+        position: absolute;
+        top: 306.25px;
+        left: 495px;
+        transform: translate(-50%, -50%);
+      }
+
+      /* Right Note Two */
+      .redSpotOne {
+        position: absolute;
+        top: 375px;
+        left: 495px;
+        transform: translate(-50%, -50%);
+      }
+
+      .imgmap {
+        width: 900px;
+      }
+    </style>
+</head>
+<body>
+  <a href="../index.html">Back to home</a> <!--Link back to home page-->
+  <p></p> <!--Used for Spacing-->
+  <div class="container">
+    <img class="imgmap" src="../images/Field25.png" alt="field" usemap="#fieldmap"> <!--Image of the field, 
+    uses the map below container div-->
+    <!--Note Text Overlay (11 Notes)-->
+    <div class="redSpotFive"><p id="rsfi"></p></div> 
+    <div class="redSpotFour"><p id="rsfo"></p></div>
+    <div class="redSpotThree"><p id="rsth"></p></div>
+    <div class="redSpotTwo"><p id="rstw"></p></div> 
+    <div class="redSpotOne"><p id="rson"></p></div>
+    <div class="blueSpotOne"><p id="bson"></p></div> 
+    <div class="blueSpotTwo"><p id="bstw"></p></div>
+    <div class="blueSpotThree"><p id="bsth"></p></div>
+    <div class="blueSpotFour"><p id="bsfo"></p></div> 
+    <div class="blueSpotFive"><p id="bsfi"></p></div>
+  </div>
+  <map name="fieldmap"> <!--Map for image, clickable areas for 11 notes-->
+    <area shape="circle" coords="495, 100, 30" alt="RedFive" onclick="redSpotFive()">
+    <area shape="circle" coords="495, 168.75, 30" alt="RedFour" onclick="redSpotFour()">
+    <area shape="circle" coords="495, 237.5, 30" alt="RedThree" onclick="redSpotThree()">
+    <area shape="circle" coords="495, 306.25, 30" alt="RedTwo" onclick="redSpotTwo()">
+    <area shape="circle" coords="495, 375, 30" alt="RedOne" onclick="redSpotOne()">
+    <area shape="circle" coords="395, 100, 30" alt="BluOne" onclick="blueSpotOne()"> <!--55-->
+    <area shape="circle" coords="395, 168.75, 30" alt="BluTwo" onclick="blueSpotTwo()">
+    <area shape="circle" coords="395, 237.5, 30" alt="BluThree" onclick="blueSpotThree()"> <!--225-->
+    <area shape="circle" coords="395, 306.25, 30" alt="BluFour" onclick="blueSpotFour()"> 
+    <area shape="circle" coords="395, 375, 30" alt="BluFive" onclick="blueSpotFive()"> <!--395-->
+  </map>
+  <p id="coordview">
+    X: <span id="mousex"></span> Y: <span id="mousey"></span> <!--Used for seeing coordinates of 
+    the cursor. Development feature for mapping. Comment out for final version-->
+  </p>
+    <!--Team Buttons Below-->
+    <input type="button" id="b3" value="B3" onclick="BlueThree()" />
+    <input type="button" id="b2" value="B2" onclick="BlueTwo()" />
+    <input type="button" id="b1" value="B1" onclick="BlueOne()" />
+    <input type="button" id="r3" value="R3" onclick="RedThree()" />
+    <input type="button" id="r2" value="R2" onclick="RedTwo()" />
+    <input type="button" id="r1" value="R1" onclick="RedOne()" />
+    <!--Team Buttons Above-->
+    <p></p> <!--Spacing-->
+    <!--Reset Buttons Below-->
+    <input type="button" id="bun" value="Reset Blue" onclick="ResetBlue()"/>
+    <input type="button" id="run" value="Reset Red" onclick="ResetRed()"/>
+    <!--Reset buttons above-->
+    <p></p> <!--Spacing-->
+    <input type="button" id="aun" value="Reset All" onclick="ResetAll()"/><!--Reset All Button-->
+    <input type="button" id="submit" value="Submit" onclick="ResetAll()"/><!--Test Submit Button-->
+  <script>
+    //Define variable for selected team
+    var teamID = "x";
+
+    window.addEventListener('mousemove', function (e) { //Detects cursor movement.
+        document.getElementById('mousex').textContent = e.x - 10; //Updates x value
+        document.getElementById('mousey').textContent = e.y - 50; //Updates y value
+    })
+
+    //Reset Left Notes
+    function ResetBlue() {
+      document.getElementById("bson").innerHTML = "";
+      document.getElementById("bstw").innerHTML = "";
+      document.getElementById("bsth").innerHTML = "";
+      document.getElementById("bsfo").innerHTML = "";
+      document.getElementById("bsfi").innerHTML = "";
+    }
+
+    //Reset Right Notes
+    function ResetRed() {
+      document.getElementById("rsfi").innerHTML = "";
+      document.getElementById("rsfo").innerHTML = "";
+      document.getElementById("rsth").innerHTML = "";
+      document.getElementById("rstw").innerHTML = "";
+      document.getElementById("rson").innerHTML = "";
+    }
+
+    //Reset All Notes
+    function ResetAll() {
+      document.getElementById("rsfi").innerHTML = "";
+      document.getElementById("rsfo").innerHTML = "";
+      document.getElementById("rsth").innerHTML = "";
+      document.getElementById("rstw").innerHTML = "";
+      document.getElementById("rson").innerHTML = "";
+      document.getElementById("bson").innerHTML = "";
+      document.getElementById("bstw").innerHTML = "";
+      document.getElementById("bsth").innerHTML = "";
+      document.getElementById("bsfo").innerHTML = "";
+      document.getElementById("bsfi").innerHTML = "";
+    }
+    
+    function redSpotFive() {
+      //alert(teamID + " Red Five"); //Alert when the left note one is clicked
+      document.getElementById("rsfi").innerHTML = teamID;
+    }
+
+    function redSpotFour() {
+      //alert(teamID + " Red Four"); //Alert when the left note two is clicked
+      document.getElementById("rsfo").innerHTML = teamID;
+    }
+
+    function redSpotThree() {
+      //alert(teamID + " Red Three"); //Alert when the left note three is clicked
+      document.getElementById("rsth").innerHTML = teamID;
+    }
+
+    function blueSpotOne() {
+      //alert(teamID + " Blue One"); //Alert when the Blue Spot one is clicked
+      document.getElementById("bson").innerHTML = teamID;
+    }
+
+    function blueSpotTwo() {
+      //alert(teamID + " Blue Two"); //Alert when the Blue Spot two is clicked
+      document.getElementById("bstw").innerHTML = teamID;
+    }
+
+    function blueSpotThree() {
+      //alert(teamID + " Blue Three"); //Alert when the Blue Spot three is clicked
+      document.getElementById("bsth").innerHTML = teamID;
+    }
+
+    function blueSpotFour() {
+      //alert(teamID + " Blue Four"); //Alert when the Blue Spot four is clicked
+      document.getElementById("bsfo").innerHTML = teamID;
+    }
+
+    function blueSpotFive() {
+      //alert(teamID + " Blue Five"); //Alert when the Blue Spot five is clicked
+      document.getElementById("bsfi").innerHTML = teamID;
+    }
+
+    function  redSpotTwo() {
+      //alert(teamID + " Red Two"); //Alert when the right note one is clicked
+      document.getElementById("rstw").innerHTML = teamID;
+    }
+
+    function  redSpotOne() {
+      //alert(teamID + " Red One"); //Alert when the right note two is clicked
+      document.getElementById("rson").innerHTML = teamID;
+    }
+
+    //Toggle button selection functions:
+    function BlueThree() {
+      teamID = "b3";
+      b1.style.backgroundColor = 'transparent';
+      b2.style.backgroundColor = 'transparent';
+      b3.style.backgroundColor = '#4287f5';
+      r1.style.backgroundColor = 'transparent';
+      r2.style.backgroundColor = 'transparent';
+      r3.style.backgroundColor = 'transparent';
+    }
+
+    function BlueTwo() {
+      teamID = "b2";
+      b1.style.backgroundColor = 'transparent';
+      b2.style.backgroundColor = '#4287f5';
+      b3.style.backgroundColor = 'transparent';
+      r1.style.backgroundColor = 'transparent';
+      r2.style.backgroundColor = 'transparent';
+      r3.style.backgroundColor = 'transparent';
+    }
+
+    function BlueOne() {
+      teamID = "b1";
+      b1.style.backgroundColor = '#4287f5';
+      b2.style.backgroundColor = 'transparent';
+      b3.style.backgroundColor = 'transparent';
+      r1.style.backgroundColor = 'transparent';
+      r2.style.backgroundColor = 'transparent';
+      r3.style.backgroundColor = 'transparent';
+    }
+
+    function RedThree() {
+      teamID = "r3";
+      b1.style.backgroundColor = 'transparent';
+      b2.style.backgroundColor = 'transparent';
+      b3.style.backgroundColor = 'transparent';
+      r1.style.backgroundColor = 'transparent';
+      r2.style.backgroundColor = 'transparent';
+      r3.style.backgroundColor = 'red';
+    }
+
+    function RedTwo() {
+      teamID = "r2";
+      b1.style.backgroundColor = 'transparent';
+      b2.style.backgroundColor = 'transparent';
+      b3.style.backgroundColor = 'transparent';
+      r1.style.backgroundColor = 'transparent';
+      r2.style.backgroundColor = 'red';
+      r3.style.backgroundColor = 'transparent';
+    }
+
+    function RedOne() {
+      teamID = "r1";
+      b1.style.backgroundColor = 'transparent';
+      b2.style.backgroundColor = 'transparent';
+      b3.style.backgroundColor = 'transparent';
+      r1.style.backgroundColor = 'red';
+      r2.style.backgroundColor = 'transparent';
+      r3.style.backgroundColor = 'transparent';
+    }
+  </script>
+</body>
+</html>
