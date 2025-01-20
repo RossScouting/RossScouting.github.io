@@ -67,11 +67,7 @@
       /*Button Hover formatting Above*/
 
       /*Reset Button Formatting Below*/
-      input[id=lun]{
-        width: 300px;
-      }
-
-      input[id=mun]{
+      input[id=bun]{
         width: 300px;
       }
 
@@ -87,27 +83,21 @@
         width: 450px;
       }
 
-      input[id=lun]:hover{
-			  border: 1px solid red;
-			  background: red;
-			  transition: 1s;
-		  }
-
-      input[id=mun]:hover{
-			  border: 1px solid red;
-			  background: red;
+      input[id=bun]:hover{
+			  border: 1px solid yellow;
+			  background: yellow;
 			  transition: 1s;
 		  }
 
       input[id=run]:hover{
-			  border: 1px solid red;
-			  background: red;
+			  border: 1px solid yellow;
+			  background: yellow;
 			  transition: 1s;
 		  }
 
       input[id=aun]:hover{
-			  border: 1px solid red;
-			  background: red;
+			  border: 1px solid yellow;
+			  background: yellow;
 			  transition: 1s;
 		  }
 
@@ -130,7 +120,7 @@
       }
 
       /* Left Note One */
-      .leftNoteOne {
+      .redSpotFive {
         position: absolute;
         top: 100px;
         left: 495px;
@@ -138,7 +128,7 @@
       }
 
       /* Left Note Two */
-      .leftNoteTwo {
+      .redSpotFour {
         position: absolute;
         top: 168.75px;
         left: 495px;
@@ -146,47 +136,47 @@
       }
 
       /* Left Note Three */
-      .leftNoteThree {
+      .redSpotThree {
         position: absolute;
         top: 237.5px;
         left: 495px;
         transform: translate(-50%, -50%);
       }
 
-      /* Middle Note One */
-      .middleNoteOne {
+      /* Blue Spot One */
+      .blueSpotOne {
         position: absolute;
         top: 100px;
         left: 395px;
         transform: translate(-50%, -50%);
       }
 
-      /* Middle Note Two */
-      .middleNoteTwo {
+      /* Blue Spot Two */
+      .blueSpotTwo {
         position: absolute;
         top: 168.75px;
         left: 395px;
         transform: translate(-50%, -50%);
       }
 
-      /* Middle Note Three */
-      .middleNoteThree {
+      /* Blue Spot Three */
+      .blueSpotThree {
         position: absolute;
         top: 237.5px;
         left: 395px;
         transform: translate(-50%, -50%);
       }
 
-      /* Middle Note Four */
-      .middleNoteFour {
+      /* Blue Spot Four */
+      .blueSpotFour {
         position: absolute;
         top: 306.25px;
         left: 395px;
         transform: translate(-50%, -50%);
       }
 
-      /* Middle Note Five */
-      .middleNoteFive {
+      /* Blue Spot Five */
+      .blueSpotFive {
         position: absolute;
         top: 375px;
         left: 395px;
@@ -194,26 +184,18 @@
       }
 
       /* Right Note One */
-      .rightNoteOne {
+      .redSpotTwo {
         position: absolute;
         top: 306.25px;
-        left: 395px;
+        left: 495px;
         transform: translate(-50%, -50%);
       }
 
       /* Right Note Two */
-      .rightNoteTwo {
+      .redSpotOne {
         position: absolute;
         top: 375px;
-        left: 395px;
-        transform: translate(-50%, -50%);
-      }
-
-      /* Right Note Three */
-      .rightNoteThree {
-        position: absolute;
-        top: 235px;
-        left: 720px;
+        left: 495px;
         transform: translate(-50%, -50%);
       }
 
@@ -229,29 +211,28 @@
     <img class="imgmap" src="../images/Field25.png" alt="field" usemap="#fieldmap"> <!--Image of the field, 
     uses the map below container div-->
     <!--Note Text Overlay (11 Notes)-->
-    <div class="leftNoteOne"><p id="lnon"></p></div> 
-    <div class="leftNoteTwo"><p id="lntw"></p></div>
-    <div class="leftNoteThree"><p id="lnth"></p></div>
-    <div class="middleNoteOne"><p id="mnon"></p></div> 
-    <div class="middleNoteTwo"><p id="mntw"></p></div>
-    <div class="middleNoteThree"><p id="mnth"></p></div>
-    <div class="middleNoteFour"><p id="mnfo"></p></div> 
-    <div class="middleNoteFive"><p id="mnfi"></p></div>
-    <div class="rightNoteOne"><p id="rnon"></p></div> 
-    <div class="rightNoteTwo"><p id="rntw"></p></div>
-    <div class="rightNoteThree"><p id="rnth"></p></div>
+    <div class="redSpotFive"><p id="rsfi"></p></div> 
+    <div class="redSpotFour"><p id="rsfo"></p></div>
+    <div class="redSpotThree"><p id="rsth"></p></div>
+    <div class="redSpotTwo"><p id="rstw"></p></div> 
+    <div class="redSpotOne"><p id="rson"></p></div>
+    <div class="blueSpotOne"><p id="bson"></p></div> 
+    <div class="blueSpotTwo"><p id="bstw"></p></div>
+    <div class="blueSpotThree"><p id="bsth"></p></div>
+    <div class="blueSpotFour"><p id="bsfo"></p></div> 
+    <div class="blueSpotFive"><p id="bsfi"></p></div>
   </div>
   <map name="fieldmap"> <!--Map for image, clickable areas for 11 notes-->
-    <area shape="circle" coords="495, 100, 30" alt="LefOne" onclick="leftNoteOne()">
-    <area shape="circle" coords="495, 168.75, 30" alt="LefTwo" onclick="leftNoteTwo()">
-    <area shape="circle" coords="495, 237.5, 30" alt="LefThree" onclick="leftNoteThree()">
-    <area shape="circle" coords="495, 306.25, 30" alt="RigOne" onclick="rightNoteOne()">
-    <area shape="circle" coords="495, 375, 30" alt="RigTwo" onclick="rightNoteTwo()">
-    <area shape="circle" coords="395, 100, 30" alt="MidOne" onclick="middleNoteOne()"> <!--55-->
-    <area shape="circle" coords="395, 168.75, 30" alt="MidTwo" onclick="middleNoteTwo()">
-    <area shape="circle" coords="395, 237.5, 30" alt="MidThree" onclick="middleNoteThree()"> <!--225-->
-    <area shape="circle" coords="395, 306.25, 30" alt="MidFour" onclick="middleNoteFour()"> 
-    <area shape="circle" coords="395, 375, 30" alt="MidFive" onclick="middleNoteFive()"> <!--395-->
+    <area shape="circle" coords="495, 100, 30" alt="RedFive" onclick="redSpotFive()">
+    <area shape="circle" coords="495, 168.75, 30" alt="RedFour" onclick="redSpotFour()">
+    <area shape="circle" coords="495, 237.5, 30" alt="RedThree" onclick="redSpotThree()">
+    <area shape="circle" coords="495, 306.25, 30" alt="RedTwo" onclick="redSpotTwo()">
+    <area shape="circle" coords="495, 375, 30" alt="RedOne" onclick="redSpotOne()">
+    <area shape="circle" coords="395, 100, 30" alt="BluOne" onclick="blueSpotOne()"> <!--55-->
+    <area shape="circle" coords="395, 168.75, 30" alt="BluTwo" onclick="blueSpotTwo()">
+    <area shape="circle" coords="395, 237.5, 30" alt="BluThree" onclick="blueSpotThree()"> <!--225-->
+    <area shape="circle" coords="395, 306.25, 30" alt="BluFour" onclick="blueSpotFour()"> 
+    <area shape="circle" coords="395, 375, 30" alt="BluFive" onclick="blueSpotFive()"> <!--395-->
   </map>
   <p id="coordview">
     X: <span id="mousex"></span> Y: <span id="mousey"></span> <!--Used for seeing coordinates of 
@@ -267,9 +248,8 @@
     <!--Team Buttons Above-->
     <p></p> <!--Spacing-->
     <!--Reset Buttons Below-->
-    <input type="button" id="lun" value="Reset Left" onclick="ResetLeft()"/>
-    <input type="button" id="mun" value="Reset Middle" onclick="ResetMiddle()"/>
-    <input type="button" id="run" value="Reset Right" onclick="ResetRight()"/>
+    <input type="button" id="bun" value="Reset Blue" onclick="ResetBlue()"/>
+    <input type="button" id="run" value="Reset Red" onclick="ResetRed()"/>
     <!--Reset buttons above-->
     <p></p> <!--Spacing-->
     <input type="button" id="aun" value="Reset All" onclick="ResetAll()"/><!--Reset All Button-->
@@ -284,96 +264,85 @@
     })
 
     //Reset Left Notes
-    function ResetLeft() {
-      document.getElementById("lnon").innerHTML = "";
-      document.getElementById("lntw").innerHTML = "";
-      document.getElementById("lnth").innerHTML = "";
-    }
-
-    //Reset Middle Notes
-    function ResetMiddle() {
-      document.getElementById("mnon").innerHTML = "";
-      document.getElementById("mntw").innerHTML = "";
-      document.getElementById("mnth").innerHTML = "";
-      document.getElementById("mnfo").innerHTML = "";
-      document.getElementById("mnfi").innerHTML = "";
+    function ResetBlue() {
+      document.getElementById("bson").innerHTML = "";
+      document.getElementById("bstw").innerHTML = "";
+      document.getElementById("bsth").innerHTML = "";
+      document.getElementById("bsfo").innerHTML = "";
+      document.getElementById("bsfi").innerHTML = "";
     }
 
     //Reset Right Notes
-    function ResetRight() {
-      document.getElementById("rnon").innerHTML = "";
-      document.getElementById("rntw").innerHTML = "";
-      document.getElementById("rnth").innerHTML = "";
+    function ResetRed() {
+      document.getElementById("rsfi").innerHTML = "";
+      document.getElementById("rsfo").innerHTML = "";
+      document.getElementById("rsth").innerHTML = "";
+      document.getElementById("rstw").innerHTML = "";
+      document.getElementById("rson").innerHTML = "";
     }
 
     //Reset All Notes
     function ResetAll() {
-      document.getElementById("lnon").innerHTML = "";
-      document.getElementById("lntw").innerHTML = "";
-      document.getElementById("lnth").innerHTML = "";
-      document.getElementById("mnon").innerHTML = "";
-      document.getElementById("mntw").innerHTML = "";
-      document.getElementById("mnth").innerHTML = "";
-      document.getElementById("mnfo").innerHTML = "";
-      document.getElementById("mnfi").innerHTML = "";
-      document.getElementById("rnon").innerHTML = "";
-      document.getElementById("rntw").innerHTML = "";
-      document.getElementById("rnth").innerHTML = "";
+      document.getElementById("rsfi").innerHTML = "";
+      document.getElementById("rsfo").innerHTML = "";
+      document.getElementById("rsth").innerHTML = "";
+      document.getElementById("rstw").innerHTML = "";
+      document.getElementById("rson").innerHTML = "";
+      document.getElementById("bson").innerHTML = "";
+      document.getElementById("bstw").innerHTML = "";
+      document.getElementById("bsth").innerHTML = "";
+      document.getElementById("bsfo").innerHTML = "";
+      document.getElementById("bsfi").innerHTML = "";
     }
     
-    function leftNoteOne() {
-      //alert(teamID + " Left Note One"); //Alert when the left note one is clicked
-      document.getElementById("lnon").innerHTML = teamID;
+    function redSpotFive() {
+      //alert(teamID + " Red Five"); //Alert when the left note one is clicked
+      document.getElementById("rsfi").innerHTML = teamID;
     }
 
-    function leftNoteTwo() {
-      //alert(teamID + " Left Note Two"); //Alert when the left note two is clicked
-      document.getElementById("lntw").innerHTML = teamID;
+    function redSpotFour() {
+      //alert(teamID + " Red Four"); //Alert when the left note two is clicked
+      document.getElementById("rsfo").innerHTML = teamID;
     }
 
-    function leftNoteThree() {
-      //alert(teamID + " Left Note Three"); //Alert when the left note three is clicked
-      document.getElementById("lnth").innerHTML = teamID;
+    function redSpotThree() {
+      //alert(teamID + " Red Three"); //Alert when the left note three is clicked
+      document.getElementById("rsth").innerHTML = teamID;
     }
 
-    function middleNoteOne() {
-      //alert(teamID + " Middle Note One"); //Alert when the middle note one is clicked
-      document.getElementById("mnon").innerHTML = teamID;
+    function blueSpotOne() {
+      //alert(teamID + " Blue One"); //Alert when the Blue Spot one is clicked
+      document.getElementById("bson").innerHTML = teamID;
     }
 
-    function middleNoteTwo() {
-      //alert(teamID + " Middle Note Two"); //Alert when the middle note two is clicked
-      document.getElementById("mntw").innerHTML = teamID;
+    function blueSpotTwo() {
+      //alert(teamID + " Blue Two"); //Alert when the Blue Spot two is clicked
+      document.getElementById("bstw").innerHTML = teamID;
     }
 
-    function middleNoteThree() {
-      //alert(teamID + " Middle Note Three"); //Alert when the middle note three is clicked
-      document.getElementById("mnth").innerHTML = teamID;
+    function blueSpotThree() {
+      //alert(teamID + " Blue Three"); //Alert when the Blue Spot three is clicked
+      document.getElementById("bsth").innerHTML = teamID;
     }
 
-    function middleNoteFour() {
-      //alert(teamID + " Middle Note Four"); //Alert when the middle note four is clicked
-      document.getElementById("mnfo").innerHTML = teamID;
+    function blueSpotFour() {
+      //alert(teamID + " Blue Four"); //Alert when the Blue Spot four is clicked
+      document.getElementById("bsfo").innerHTML = teamID;
     }
 
-    function middleNoteFive() {
-      //alert(teamID + " Middle Note Five"); //Alert when the middle note five is clicked
-      document.getElementById("mnfi").innerHTML = teamID;
+    function blueSpotFive() {
+      //alert(teamID + " Blue Five"); //Alert when the Blue Spot five is clicked
+      document.getElementById("bsfi").innerHTML = teamID;
     }
 
-    function  rightNoteOne() {
-      //alert(teamID + " Right Note One"); //Alert when the right note one is clicked
-      document.getElementById("rnon").innerHTML = teamID;
+    function  redSpotTwo() {
+      //alert(teamID + " Red Two"); //Alert when the right note one is clicked
+      document.getElementById("rstw").innerHTML = teamID;
     }
 
-    function  rightNoteTwo() {
-      //alert(teamID + " Right Note Two"); //Alert when the right note two is clicked
-      document.getElementById("rntw").innerHTML = teamID;
-    }
-
-    function rightNoteThree() {
-      //alert(teamID + " Right Note Three"); //Alert when the right note three is clicked
-      document.getElementById("rnth").innerHTML = teamID;
+    function  redSpotOne() {
+      //alert(teamID + " Red One"); //Alert when the right note two is clicked
+      document.getElementById("rson").innerHTML = teamID;
     }
 
     //Toggle button selection functions:
