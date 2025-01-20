@@ -132,24 +132,24 @@
       /* Left Note One */
       .leftNoteOne {
         position: absolute;
-        top: 85px;
-        left: 170px;
+        top: 100px;
+        left: 495px;
         transform: translate(-50%, -50%);
       }
 
       /* Left Note Two */
       .leftNoteTwo {
         position: absolute;
-        top: 160px;
-        left: 170px;
+        top: 168.75px;
+        left: 495px;
         transform: translate(-50%, -50%);
       }
 
       /* Left Note Three */
       .leftNoteThree {
         position: absolute;
-        top: 235px;
-        left: 170px;
+        top: 237.5px;
+        left: 495px;
         transform: translate(-50%, -50%);
       }
 
@@ -165,7 +165,7 @@
       .middleNoteTwo {
         position: absolute;
         top: 168.75px;
-        left: 445px;
+        left: 395px;
         transform: translate(-50%, -50%);
       }
 
@@ -196,16 +196,16 @@
       /* Right Note One */
       .rightNoteOne {
         position: absolute;
-        top: 85px;
-        left: 720px;
+        top: 306.25px;
+        left: 395px;
         transform: translate(-50%, -50%);
       }
 
       /* Right Note Two */
       .rightNoteTwo {
         position: absolute;
-        top: 160px;
-        left: 720px;
+        top: 375px;
+        left: 395px;
         transform: translate(-50%, -50%);
       }
 
@@ -242,17 +242,16 @@
     <div class="rightNoteThree"><p id="rnth"></p></div>
   </div>
   <map name="fieldmap"> <!--Map for image, clickable areas for 11 notes-->
-    <area shape="circle" coords="170, 85, 30" alt="LefOne" onclick="leftNoteOne()">
-    <area shape="circle" coords="170, 160, 30" alt="LefTwo" onclick="leftNoteTwo()">
-    <area shape="circle" coords="170, 235, 30" alt="LefThree" onclick="leftNoteThree()">
+    <area shape="circle" coords="495, 100, 30" alt="LefOne" onclick="leftNoteOne()">
+    <area shape="circle" coords="495, 168.75, 30" alt="LefTwo" onclick="leftNoteTwo()">
+    <area shape="circle" coords="495, 237.5, 30" alt="LefThree" onclick="leftNoteThree()">
+    <area shape="circle" coords="495, 306.25, 30" alt="RigOne" onclick="rightNoteOne()">
+    <area shape="circle" coords="495, 375, 30" alt="RigTwo" onclick="rightNoteTwo()">
     <area shape="circle" coords="395, 100, 30" alt="MidOne" onclick="middleNoteOne()"> <!--55-->
-    <area shape="circle" coords="445, 168.75, 30" alt="MidTwo" onclick="middleNoteTwo()">
+    <area shape="circle" coords="395, 168.75, 30" alt="MidTwo" onclick="middleNoteTwo()">
     <area shape="circle" coords="395, 237.5, 30" alt="MidThree" onclick="middleNoteThree()"> <!--225-->
     <area shape="circle" coords="395, 306.25, 30" alt="MidFour" onclick="middleNoteFour()"> 
     <area shape="circle" coords="395, 375, 30" alt="MidFive" onclick="middleNoteFive()"> <!--395-->
-    <area shape="circle" coords="720, 85, 30" alt="RigOne" onclick="rightNoteOne()">
-    <area shape="circle" coords="720, 160, 30" alt="RigTwo" onclick="rightNoteTwo()">
-    <area shape="circle" coords="720, 235, 30" alt="RigThree" onclick="rightNoteThree()">
   </map>
   <p id="coordview">
     X: <span id="mousex"></span> Y: <span id="mousey"></span> <!--Used for seeing coordinates of 
