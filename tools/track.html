@@ -16,7 +16,7 @@
             width: 600px;
             height: 300px;
             border: 5px solid black;
-            border-radius: 150px;
+            border-radius: 50%;
             background: lightgray;
             margin-top: 20px;
         }
@@ -27,6 +27,7 @@
             background: red;
             border-radius: 50%;
             top: 140px;
+            left: 290px;
         }
     </style>
 </head>
@@ -54,7 +55,11 @@
             const time1 = document.getElementById('runner1Time').value;
             const time2 = document.getElementById('runner2Time').value;
             
-            const trackLength = 600;
+            const trackRadiusX = 300;
+            const trackRadiusY = 150;
+            const centerX = 300;
+            const centerY = 150;
+            
             const runner1 = document.getElementById('runner1');
             const runner2 = document.getElementById('runner2');
             
@@ -63,11 +68,18 @@
                 if (!startTime) startTime = timestamp;
                 let elapsed = (timestamp - startTime) / 1000;
                 
-                let pos1 = Math.min((elapsed / time1) * trackLength, trackLength);
-                let pos2 = Math.min((elapsed / time2) * trackLength, trackLength);
+                let angle1 = (elapsed / time1) * 2 * Math.PI;
+                let angle2 = (elapsed / time2) * 2 * Math.PI;
                 
-                runner1.style.left = pos1 + 'px';
-                runner2.style.left = pos2 + 'px';
+                let x1 = centerX + trackRadiusX * Math.cos(angle1) - 10;
+                let y1 = centerY + trackRadiusY * Math.sin(angle1) - 10;
+                let x2 = centerX + trackRadiusX * Math.cos(angle2) - 10;
+                let y2 = centerY + trackRadiusY * Math.sin(angle2) - 10;
+                
+                runner1.style.left = x1 + 'px';
+                runner1.style.top = y1 + 'px';
+                runner2.style.left = x2 + 'px';
+                runner2.style.top = y2 + 'px';
                 
                 if (elapsed < Math.max(time1, time2)) {
                     requestAnimationFrame(updateRace);
