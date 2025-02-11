@@ -20,6 +20,14 @@
             background: lightgray;
             margin-top: 20px;
         }
+        .start-line, .finish-line {
+            position: absolute;
+            width: 5px;
+            height: 50px;
+            background: black;
+            top: 125px;
+            left: 295px;
+        }
         .runner {
             position: absolute;
             width: 20px;
@@ -28,6 +36,10 @@
             border-radius: 50%;
             top: 140px;
             left: 290px;
+        }
+        #raceTimer {
+            font-size: 20px;
+            margin: 10px;
         }
     </style>
 </head>
@@ -44,7 +56,11 @@
     </label>
     <button onclick="startRace()">Start Race</button>
     
+    <div id="raceTimer">Time: 0.00s</div>
+    
     <div class="track">
+        <div class="start-line"></div>
+        <div class="finish-line"></div>
         <div class="runner" id="runner1"></div>
         <div class="runner" id="runner2" style="background: blue;"></div>
     </div>
@@ -62,11 +78,13 @@
             
             const runner1 = document.getElementById('runner1');
             const runner2 = document.getElementById('runner2');
+            const raceTimer = document.getElementById('raceTimer');
             
             let startTime = null;
             function updateRace(timestamp) {
                 if (!startTime) startTime = timestamp;
                 let elapsed = (timestamp - startTime) / 1000;
+                raceTimer.innerText = `Time: ${elapsed.toFixed(2)}s`;
                 
                 let angle1 = (elapsed / time1) * 2 * Math.PI;
                 let angle2 = (elapsed / time2) * 2 * Math.PI;
