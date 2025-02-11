@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Track and Field Simulator</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-family: Arial, sans-serif;
+        }
+        .track {
+            position: relative;
+            width: 600px;
+            height: 300px;
+            border: 5px solid black;
+            border-radius: 150px;
+            background: lightgray;
+            margin-top: 20px;
+        }
+        .runner {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: red;
+            border-radius: 50%;
+            top: 140px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Track and Field Simulator</h1>
+    <label>Race Distance (m): 
+        <input type="number" id="raceDistance" value="400">
+    </label>
+    <label>Runner 1 Time (s): 
+        <input type="number" id="runner1Time" value="50">
+    </label>
+    <label>Runner 2 Time (s): 
+        <input type="number" id="runner2Time" value="55">
+    </label>
+    <button onclick="startRace()">Start Race</button>
+    
+    <div class="track">
+        <div class="runner" id="runner1"></div>
+        <div class="runner" id="runner2" style="background: blue;"></div>
+    </div>
+    
+    <script>
+        function startRace() {
+            const distance = document.getElementById('raceDistance').value;
+            const time1 = document.getElementById('runner1Time').value;
+            const time2 = document.getElementById('runner2Time').value;
+            
+            const trackLength = 600;
+            const runner1 = document.getElementById('runner1');
+            const runner2 = document.getElementById('runner2');
+            
+            let startTime = null;
+            function updateRace(timestamp) {
+                if (!startTime) startTime = timestamp;
+                let elapsed = (timestamp - startTime) / 1000;
+                
+                let pos1 = Math.min((elapsed / time1) * trackLength, trackLength);
+                let pos2 = Math.min((elapsed / time2) * trackLength, trackLength);
+                
+                runner1.style.left = pos1 + 'px';
+                runner2.style.left = pos2 + 'px';
+                
+                if (elapsed < Math.max(time1, time2)) {
+                    requestAnimationFrame(updateRace);
+                }
+            }
+            requestAnimationFrame(updateRace);
+        }
+    </script>
+</body>
+</html>
