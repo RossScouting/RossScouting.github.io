@@ -28,7 +28,6 @@
       width: 16px;
       height: 16px;
       border-radius: 50%;
-      /* we'll position them with JS */
     }
     #runner1 {
       background: red;
@@ -62,58 +61,51 @@
   <div id="raceTimer">Time: 0.00s</div>
   
   <div class="track-container" id="trackContainer">
-    <!-- SVG for drawing the track outline and markers -->
     <svg id="trackSVG" width="600" height="300"></svg>
-    <!-- Runners -->
     <div class="runner" id="runner1"></div>
     <div class="runner" id="runner2"></div>
   </div>
   
   <script>
-    /*************** Track Geometry Setup ****************/
-    // We define our track in “meter‑space.”
-    // Two straights of 100m and two semicircular curves of 100m (arc length) each.
-    const totalDistance = 400; // meters
+    /************* Track Geometry Setup *************/
+    // One lap is defined as 400 meters: 2 straights (100m each) and 2 curves (100m arc each).
+    const totalLap = 400; // meters
     const straightLength = 100; // each straight in meters
     const curveArc = 100;       // each curve's arc length in meters
-    // For a perfect semicircle, arc length = π * R, so:
-    const R = 100 / Math.PI; // radius in meters (~31.83)
+    const R = 100 / Math.PI;    // radius (in meters) for each curve (~31.83)
     
-    // Our track’s key points (in meters) are defined as follows:
+    // Define key segments in meter-space:
     // Bottom straight: from (R, 0) to (R+100, 0)
-    // Right curve (100–200m): center at (R+100, R), goes from angle -π/2 to +π/2
+    // Right curve (100–200m): center at (R+100, R), arc from -90° to +90°
     // Top straight (200–300m): from (R+100, 2R) to (R, 2R)
-    // Left curve (300–400m): center at (R, R), goes from angle +π/2 back to -π/2
+    // Left curve (300–400m): center at (R, R), arc from +90° to -90°
     
-    // We use a scale factor to convert meters to pixels.
-    // First, determine the track’s bounding box in meters.
-    // Leftmost point: left curve, at (R, R) minus R horizontally: x = R - R = 0.
-    // Rightmost point: right curve, at (R+100, R) plus R horizontally: x = R+100+R = 100 + 2*R.
-    // Vertical span: from y = 0 to y = 2R.
-    const trackWidth_m = 100 + 2 * R; // in meters
-    const trackHeight_m = 2 * R;        // in meters
+    // Determine the track’s bounding box in meters.
+    const trackWidth_m = 100 + 2 * R; // from x = R to x = R+100+R
+    const trackHeight_m = 2 * R;      // from y = 0 to y = 2R
     
-    // To fit within our 600×300 container, choose a scale:
-    // We want (trackWidth_m * scale) <= 600 and (trackHeight_m * scale) <= 300.
-    // For example, with scale = 3.6:
-    const S = 3.6; // pixels per meter
-    
-    // Compute offsets to center the track in the container:
+    // Container dimensions.
     const containerWidth = 600;
     const containerHeight = 300;
+    
+    // Scale factor: pixels per meter.
+    const S = 3.6;
+    
+    // Offsets to center the track in the container.
     const offsetX = (containerWidth - trackWidth_m * S) / 2;
     const offsetY = (containerHeight - trackHeight_m * S) / 2;
     
-    // Function: Convert meter coordinates to pixel coordinates.
+    // Convert meter-space coordinates to pixel coordinates.
+    // Note: We flip the y-axis so that meter y=0 is at the bottom.
     function toPixel(pos) {
       return {
         x: pos.x * S + offsetX,
-        y: pos.y * S + offsetY
+        y: containerHeight - (pos.y * S + offsetY)
       };
     }
     
-    // Function: Given progress d (in meters along the track, 0 ≤ d ≤ 400),
-    // return the (x, y) coordinates in meter-space.
+    // Given a distance d (in meters along a lap, 0 ≤ d < 400),
+    // return the (x, y) coordinate in meter-space.
     function getTrackPosition(d) {
       let x, y;
       if (d <= 100) {
@@ -127,7 +119,7 @@
         x = (R + 100) + R * Math.cos(angle);
         y = R + R * Math.sin(angle);
       } else if (d <= 300) {
-        // Top straight: from (R+100, 2R) to (R, 2R)
+        // Top straight: linear from (R+100, 2R) to (R, 2R)
         x = (R + 100) - (d - 200);
         y = 2 * R;
       } else { // d between 300 and 400
@@ -140,33 +132,31 @@
       return { x, y };
     }
     
-    /*************** Drawing the Track ****************/
+    /*************** Draw the Track ***************/
     function drawTrack() {
       const svg = document.getElementById('trackSVG');
       svg.innerHTML = ''; // clear previous drawing
       
-      // Compute key positions in pixel coordinates.
+      // Get key positions in pixel coordinates.
       const p0   = toPixel(getTrackPosition(0));
       const p100 = toPixel(getTrackPosition(100));
       const p200 = toPixel(getTrackPosition(200));
       const p300 = toPixel(getTrackPosition(300));
       // p400 is the same as p0.
       
-      // Radius in pixels for the curves:
       const radiusPx = R * S;
       
-      // Build an SVG path representing the track centerline.
-      // We use straight lines for the straights and SVG arc commands for the curves.
+      // Build an SVG path representing one lap of the track.
       let pathStr = `M ${p0.x.toFixed(2)} ${p0.y.toFixed(2)} `;
-      // Bottom straight (0 to 100m)
+      // Bottom straight (0–100m)
       pathStr += `L ${p100.x.toFixed(2)} ${p100.y.toFixed(2)} `;
-      // Right curve (100 to 200m): arc with radius (radiusPx)
+      // Right curve (100–200m)
       pathStr += `A ${radiusPx.toFixed(2)} ${radiusPx.toFixed(2)} 0 0,1 ${p200.x.toFixed(2)} ${p200.y.toFixed(2)} `;
-      // Top straight (200 to 300m)
+      // Top straight (200–300m)
       pathStr += `L ${p300.x.toFixed(2)} ${p300.y.toFixed(2)} `;
-      // Left curve (300 to 400m) back to start:
+      // Left curve (300–400m) back to start
       pathStr += `A ${radiusPx.toFixed(2)} ${radiusPx.toFixed(2)} 0 0,1 ${p0.x.toFixed(2)} ${p0.y.toFixed(2)} `;
-      pathStr += 'Z'; // close path
+      pathStr += 'Z';
       
       const pathElem = document.createElementNS('http://www.w3.org/2000/svg', 'path');
       pathElem.setAttribute('d', pathStr);
@@ -205,14 +195,13 @@
       });
     }
     
-    /*************** Race Animation ****************/
+    /*************** Race Animation ***************/
     function startRace() {
-      // Read user inputs.
       const raceDistance = parseFloat(document.getElementById('raceDistance').value);
       const runner1Time = parseFloat(document.getElementById('runner1Time').value);
       const runner2Time = parseFloat(document.getElementById('runner2Time').value);
       
-      // Draw the track outline.
+      // Redraw the track outline.
       drawTrack();
       
       const runner1 = document.getElementById('runner1');
@@ -221,7 +210,6 @@
       
       // Position runners at the start (d = 0).
       const startPos = toPixel(getTrackPosition(0));
-      // We offset by half the runner’s size (16px/2 = 8) to center them.
       runner1.style.left = (startPos.x - 8) + 'px';
       runner1.style.top = (startPos.y - 8) + 'px';
       runner2.style.left = (startPos.x - 8) + 'px';
@@ -233,21 +221,24 @@
         let elapsed = (timestamp - startTime) / 1000;
         raceTimer.textContent = `Time: ${elapsed.toFixed(2)}s`;
         
-        // For each runner, compute progress (in meters along the track).
-        // They stop when their elapsed time reaches their finish time.
-        const progress1 = Math.min((elapsed / runner1Time) * raceDistance, raceDistance);
-        const progress2 = Math.min((elapsed / runner2Time) * raceDistance, raceDistance);
-        
-        const pos1 = toPixel(getTrackPosition(progress1));
-        const pos2 = toPixel(getTrackPosition(progress2));
-        
+        // For each runner, compute the progress in meters along the race.
+        const progress1Meters = Math.min((elapsed / runner1Time) * raceDistance, raceDistance);
+        const progress2Meters = Math.min((elapsed / runner2Time) * raceDistance, raceDistance);
+  
+        // Map the progress to a position on the 400m track (using modulo).
+        const displayProgress1 = progress1Meters % 400;
+        const displayProgress2 = progress2Meters % 400;
+  
+        const pos1 = toPixel(getTrackPosition(displayProgress1));
+        const pos2 = toPixel(getTrackPosition(displayProgress2));
+  
         runner1.style.left = (pos1.x - 8) + 'px';
         runner1.style.top = (pos1.y - 8) + 'px';
         runner2.style.left = (pos2.x - 8) + 'px';
         runner2.style.top = (pos2.y - 8) + 'px';
-        
-        // Continue animating until both runners have finished.
-        if (progress1 < raceDistance || progress2 < raceDistance) {
+  
+        // Continue animating until both runners have reached their finish distance.
+        if (progress1Meters < raceDistance || progress2Meters < raceDistance) {
           requestAnimationFrame(updateRace);
         }
       }
