@@ -11,6 +11,14 @@
       align-items: center;
       font-family: Arial, sans-serif;
     }
+    /* Flex container for the table and track */
+    #raceDisplay {
+      display: flex;
+      align-items: flex-start;
+    }
+    #splitTableContainer {
+      margin-right: 20px;
+    }
     .track-container {
       position: relative;
       width: 600px;
@@ -58,12 +66,28 @@
   </div>
   <div id="raceTimer">Time: 0.00s</div>
   
-  <div class="track-container" id="trackContainer">
-    <!-- SVG for drawing the track outline and markers -->
-    <svg id="trackSVG" width="600" height="300"></svg>
-    <!-- Runners -->
-    <div class="runner" id="runner1"></div>
-    <div class="runner" id="runner2"></div>
+  <!-- Container holding the splits table and the track -->
+  <div id="raceDisplay">
+    <div id="splitTableContainer">
+      <table id="splitTable" border="1" cellpadding="4">
+         <thead>
+           <tr>
+             <th>Distance (m)</th>
+             <th>Runner 1 (s)</th>
+             <th>Runner 2 (s)</th>
+           </tr>
+         </thead>
+         <tbody id="splitTableBody">
+         </tbody>
+      </table>
+    </div>
+    <div class="track-container" id="trackContainer">
+      <!-- SVG for drawing the track outline and markers -->
+      <svg id="trackSVG" width="600" height="300"></svg>
+      <!-- Runners -->
+      <div class="runner" id="runner1"></div>
+      <div class="runner" id="runner2"></div>
+    </div>
   </div>
   
   <script>
@@ -140,7 +164,7 @@
         const u = p / 100;
         const angle = -Math.PI/2 + u * Math.PI; // at u=0: -π/2, at u=1: +π/2
         // For a left curve, center is (R, R) and radius = R.
-        x = R + -1 * (R * Math.cos(angle)); //test
+        x = R + -1 * (R * Math.cos(angle));
         y = R + R * Math.sin(angle);
       } else if (p <= 200) {
         // Segment 2: Reversed top straight.
@@ -218,15 +242,35 @@
         text.setAttribute('x', (pos.x + 5).toFixed(2));
         text.setAttribute('y', (pos.y - 5).toFixed(2));
         text.setAttribute('font-size', '10');
-
-         // Swap the labels for 100 and 300.
+  
+        // Swap the labels for 100 and 300.
         let label = d;
         if (d === 100) label = 300;
         else if (d === 300) label = 100;
-
+  
         text.textContent = label + 'm';
         svg.appendChild(text);
       });
+    }
+    
+    /*************** Splits Table Update ****************/
+    function updateSplitsTable(raceDistance, runner1Time, runner2Time) {
+      const tableBody = document.getElementById('splitTableBody');
+      tableBody.innerHTML = '';
+      // Create a row for every 100 m increment (including 0 and the finish).
+      for (let d = 0; d <= raceDistance; d += 100) {
+        const row = document.createElement('tr');
+        const cellDistance = document.createElement('td');
+        cellDistance.textContent = d;
+        const cellRunner1 = document.createElement('td');
+        cellRunner1.textContent = ((runner1Time * (d / raceDistance))).toFixed(2);
+        const cellRunner2 = document.createElement('td');
+        cellRunner2.textContent = ((runner2Time * (d / raceDistance))).toFixed(2);
+        row.appendChild(cellDistance);
+        row.appendChild(cellRunner1);
+        row.appendChild(cellRunner2);
+        tableBody.appendChild(row);
+      }
     }
     
     /*************** Race Animation ****************/
@@ -234,6 +278,9 @@
       const raceDistance = parseFloat(document.getElementById('raceDistance').value);
       const runner1Time = parseFloat(document.getElementById('runner1Time').value);
       const runner2Time = parseFloat(document.getElementById('runner2Time').value);
+      
+      // Update splits table with the current race settings.
+      updateSplitsTable(raceDistance, runner1Time, runner2Time);
       
       // Draw the track outline.
       drawTrack();
