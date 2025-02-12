@@ -67,42 +67,28 @@
   </div>
   
   <script>
-    /*************** Track Geometry Setup ****************/
-    // We define our track in “meter‑space.”
-    // Two straights of 100m and two semicircular curves of 100m (arc length) each.
-    const totalDistance = 400; // meters
-    const straightLength = 100; // each straight in meters
-    const curveArc = 100;       // each curve's arc length in meters
-    // For a perfect semicircle, arc length = π * R, so:
-    const R = 100 / Math.PI; // radius in meters (~31.83)
-    
-    // Our track’s key points (in meters) are defined as follows:
+    /*************** Clockwise Track Geometry Setup ****************/
+    // In "meter‑space", the original (clockwise) track is defined as:
     // Bottom straight: from (R, 0) to (R+100, 0)
-    // Right curve (100–200m): center at (R+100, R), goes from angle -π/2 to +π/2
+    // Right curve (100–200m): centered at (R+100, R), arc from -90° to +90°
     // Top straight (200–300m): from (R+100, 2R) to (R, 2R)
-    // Left curve (300–400m): center at (R, R), goes from angle +π/2 back to -π/2
-    // This defines a clockwise track.
+    // Left curve (300–400m): centered at (R, R), arc from +90° to -90°
+    const straightLength = 100; // meters per straight
+    const curveArc = 100;       // meters per curve (arc length)
+    const R = 100 / Math.PI;    // radius in meters (~31.83)
     
-    // We use a scale factor to convert meters to pixels.
-    // First, determine the track’s bounding box in meters.
-    // Leftmost point: left curve, at (R, R) minus R horizontally: x = R - R = 0.
-    // Rightmost point: right curve, at (R+100, R) plus R horizontally: x = R+100+R = 100 + 2*R.
-    // Vertical span: from y = 0 to y = 2R.
-    const trackWidth_m = 100 + 2 * R; // in meters
-    const trackHeight_m = 2 * R;        // in meters
+    // The track’s bounding box (in meters):
+    const trackWidth_m = 100 + 2 * R;  // from x = R to x = R+100+R
+    const trackHeight_m = 2 * R;       // from y = 0 to y = 2R
     
-    // To fit within our 600×300 container, choose a scale:
-    // We want (trackWidth_m * scale) <= 600 and (trackHeight_m * scale) <= 300.
-    // For example, with scale = 3.6:
+    // Scale factor to convert meters to pixels.
     const S = 3.6; // pixels per meter
-    
-    // Compute offsets to center the track in the container:
     const containerWidth = 600;
     const containerHeight = 300;
     const offsetX = (containerWidth - trackWidth_m * S) / 2;
     const offsetY = (containerHeight - trackHeight_m * S) / 2;
     
-    // Function: Convert meter coordinates to pixel coordinates.
+    // Convert meter coordinates to pixel coordinates.
     function toPixel(pos) {
       return {
         x: pos.x * S + offsetX,
@@ -110,40 +96,74 @@
       };
     }
     
-    // Function: Given progress d (in meters along the track, 0 ≤ d ≤ 400),
-    // return the (x, y) coordinates in meter-space for the clockwise track.
+    // Clockwise track position function (used for drawing the track).
     function getTrackPosition(d) {
       let x, y;
       if (d <= 100) {
-        // Bottom straight: linear from (R, 0) to (R+100, 0)
+        // Bottom straight: from (R, 0) to (R+100, 0)
         x = R + d;
         y = 0;
       } else if (d <= 200) {
         // Right curve: semicircle with center (R+100, R)
-        const t = (d - 100) / 100; // t from 0 to 1
-        const angle = -Math.PI / 2 + t * Math.PI; // from -90° to +90°
+        const t = (d - 100) / 100; // 0 to 1
+        const angle = -Math.PI/2 + t * Math.PI; // -90° to +90°
         x = (R + 100) + R * Math.cos(angle);
         y = R + R * Math.sin(angle);
       } else if (d <= 300) {
         // Top straight: from (R+100, 2R) to (R, 2R)
         x = (R + 100) - (d - 200);
         y = 2 * R;
-      } else { // d between 300 and 400
+      } else { // d in [300,400]
         // Left curve: semicircle with center (R, R)
-        const t = (d - 300) / 100; // t from 0 to 1
-        const angle = Math.PI / 2 - t * Math.PI; // from +90° to -90°
+        const t = (d - 300) / 100; // 0 to 1
+        const angle = Math.PI/2 - t * Math.PI; // +90° to -90°
         x = R + R * Math.cos(angle);
         y = R + R * Math.sin(angle);
       }
       return { x, y };
     }
     
-    // To get counter-clockwise movement along the same track shape,
-    // we simply invert the progress value along a 400m lap.
-    function getCounterClockwisePosition(progress) {
-      // Invert progress (mod 400) so that movement is reversed.
-      const invertedProgress = (400 - (progress % 400)) % 400;
-      return getTrackPosition(invertedProgress);
+    /*************** Counterclockwise Runner Position ****************/
+    // We want the same track shape but the runners to run counterclockwise.
+    // The counterclockwise order (starting at the same start/finish line) is:
+    // Segment 1 (0–100): Reversed left curve, going from (R,0) to (R,2R)
+    // Segment 2 (100–200): Reversed top straight, from (R,2R) to (R+100,2R)
+    // Segment 3 (200–300): Reversed right curve, from (R+100,2R) to (R+100,0)
+    // Segment 4 (300–400): Reversed bottom straight, from (R+100,0) to (R,0)
+    function getCCWTrackPosition(p) {
+      // p: progress in meters along a 400m lap (0 <= p < 400)
+      p = p % 400;
+      let x, y;
+      if (p <= 100) {
+        // Segment 1: Reversed left curve.
+        // Let u = p/100, then angle goes linearly from -π/2 to +π/2.
+        const u = p / 100;
+        const angle = -Math.PI/2 + u * Math.PI; // at u=0: -π/2, at u=1: +π/2
+        // For a left curve, center is (R, R) and radius = R.
+        x = R + R * Math.cos(angle);
+        y = R + R * Math.sin(angle);
+      } else if (p <= 200) {
+        // Segment 2: Reversed top straight.
+        // u goes from 0 to 1; linearly interpolate from (R,2R) to (R+100,2R).
+        const u = (p - 100) / 100;
+        x = R + u * 100;
+        y = 2 * R;
+      } else if (p <= 300) {
+        // Segment 3: Reversed right curve.
+        // u goes from 0 to 1; for right curve reversed, center is (R+100, R) with radius = R.
+        // Angle goes from π/2 to -π/2.
+        const u = (p - 200) / 100;
+        const angle = Math.PI/2 - u * Math.PI;
+        x = (R + 100) + R * Math.cos(angle);
+        y = R + R * Math.sin(angle);
+      } else {
+        // Segment 4: Reversed bottom straight.
+        // u goes from 0 to 1; interpolate from (R+100,0) to (R,0).
+        const u = (p - 300) / 100;
+        x = (R + 100) - u * 100;
+        y = 0;
+      }
+      return { x, y };
     }
     
     /*************** Drawing the Track ****************/
@@ -151,17 +171,15 @@
       const svg = document.getElementById('trackSVG');
       svg.innerHTML = ''; // clear previous drawing
       
-      // Compute key positions in pixel coordinates using the clockwise positions.
+      // Use the clockwise positions for drawing.
       const p0   = toPixel(getTrackPosition(0));
       const p100 = toPixel(getTrackPosition(100));
       const p200 = toPixel(getTrackPosition(200));
       const p300 = toPixel(getTrackPosition(300));
-      // p400 is the same as p0.
+      // p400 equals p0.
       
-      // Radius in pixels for the curves:
       const radiusPx = R * S;
       
-      // Build an SVG path representing the track centerline.
       let pathStr = `M ${p0.x.toFixed(2)} ${p0.y.toFixed(2)} `;
       pathStr += `L ${p100.x.toFixed(2)} ${p100.y.toFixed(2)} `;
       pathStr += `A ${radiusPx.toFixed(2)} ${radiusPx.toFixed(2)} 0 0,1 ${p200.x.toFixed(2)} ${p200.y.toFixed(2)} `;
@@ -186,7 +204,7 @@
       finishLine.setAttribute('stroke-width', '2');
       svg.appendChild(finishLine);
       
-      // Place markers at every 100m (0, 100, 200, 300m).
+      // Place markers at 0, 100, 200, and 300m (using clockwise positions).
       [0, 100, 200, 300].forEach(d => {
         const pos = toPixel(getTrackPosition(d));
         const marker = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
@@ -218,8 +236,8 @@
       const runner2 = document.getElementById('runner2');
       const raceTimer = document.getElementById('raceTimer');
       
-      // Position runners at the start using the counter-clockwise position.
-      const startPos = toPixel(getCounterClockwisePosition(0));
+      // Position runners at the start using counterclockwise mapping.
+      const startPos = toPixel(getCCWTrackPosition(0));
       runner1.style.left = (startPos.x - 8) + 'px';
       runner1.style.top = (startPos.y - 8) + 'px';
       runner2.style.left = (startPos.x - 8) + 'px';
@@ -231,20 +249,19 @@
         let elapsed = (timestamp - startTime) / 1000;
         raceTimer.textContent = `Time: ${elapsed.toFixed(2)}s`;
         
-        // Compute each runner's progress (in meters along the race).
+        // For each runner, compute progress (in meters along the race), clamped to raceDistance.
         const progress1 = Math.min((elapsed / runner1Time) * raceDistance, raceDistance);
         const progress2 = Math.min((elapsed / runner2Time) * raceDistance, raceDistance);
         
-        // Use the counter-clockwise mapping for runner positions.
-        const pos1 = toPixel(getCounterClockwisePosition(progress1));
-        const pos2 = toPixel(getCounterClockwisePosition(progress2));
+        const pos1 = toPixel(getCCWTrackPosition(progress1));
+        const pos2 = toPixel(getCCWTrackPosition(progress2));
         
         runner1.style.left = `${pos1.x - 8}px`;
         runner1.style.top = `${pos1.y - 8}px`;
         runner2.style.left = `${pos2.x - 8}px`;
         runner2.style.top = `${pos2.y - 8}px`;
         
-        // Continue animating until both runners finish.
+        // Continue animating until both runners have finished.
         if (progress1 < raceDistance || progress2 < raceDistance) {
           requestAnimationFrame(updateRace);
         }
