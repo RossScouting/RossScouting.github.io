@@ -180,7 +180,7 @@
     }
     
     // Maps a runner’s progress (in meters along a lap) to a point on the 400m track,
-    // assuming counterclockwise running (wraps progress modulo 400).
+    // assuming counterclockwise running. (Wraps progress modulo 400.)
     function getCCWTrackPosition(d) {
       d = d % 400;
       let x, y;
@@ -242,7 +242,7 @@
       pathElem.setAttribute('stroke-width', '2');
       svg.appendChild(pathElem);
       
-      // Draw start/finish line at p0.
+      // Draw the start/finish line at p0.
       const finishLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');
       finishLine.setAttribute('x1', p0.x.toFixed(2));
       finishLine.setAttribute('y1', (p0.y - 10).toFixed(2));
@@ -266,6 +266,7 @@
         text.setAttribute('x', (pos.x + 5).toFixed(2));
         text.setAttribute('y', (pos.y - 5).toFixed(2));
         text.setAttribute('font-size', '10');
+        // For Track A, optionally swap labels for clarity:
         let label = d;
         if (d === 100) label = 300;
         else if (d === 300) label = 100;
@@ -275,7 +276,8 @@
     }
     
     // Draw the 200m track outline.
-    // Same physical outline is used but markers are scaled by 0.5.
+    // Uses the same physical outline as for 400m,
+    // but markers are labeled with scaled distances.
     function drawTrack200() {
       const svg = document.getElementById('trackSVG200');
       svg.innerHTML = '';
@@ -299,7 +301,7 @@
       pathElem.setAttribute('stroke-width', '2');
       svg.appendChild(pathElem);
       
-      // Start/finish line.
+      // Draw the start/finish line.
       const finishLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');
       finishLine.setAttribute('x1', p0.x.toFixed(2));
       finishLine.setAttribute('y1', (p0.y - 10).toFixed(2));
@@ -309,7 +311,19 @@
       finishLine.setAttribute('stroke-width', '2');
       svg.appendChild(finishLine);
       
-      // Markers: physical distances 0, 100, 200, 300 m become 0, 50, 100, and 150 m.
+      // Markers: physical distances 0, 100, 200, 300 m are labeled (after scaling) as follows:
+      // Normally, they'd be 0, 50, 100, and 150 m.
+      // Now we switch the labels for the markers at 100 and 300:
+      //   - At physical 100 m, instead of "50m", display "150m".
+      //   - At physical 300 m, instead of "150m", display "50m".
+      // Also, we remove the extra finish label ("200m").
+      const labels = {
+        0: "0m",
+        100: "150m",
+        200: "100m",
+        300: "50m"
+      };
+      
       [0, 100, 200, 300].forEach(d => {
         const pos = toPixel(getTrackPosition(d));
         const marker = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
@@ -323,20 +337,13 @@
         text.setAttribute('x', (pos.x + 5).toFixed(2));
         text.setAttribute('y', (pos.y - 5).toFixed(2));
         text.setAttribute('font-size', '10');
-        text.textContent = (d * 0.5).toFixed(0) + 'm';
+        text.textContent = labels[d];
         svg.appendChild(text);
       });
-      
-      // Optionally, label the finish line.
-      const finishText = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-      finishText.setAttribute('x', (p0.x - 30).toFixed(2));
-      finishText.setAttribute('y', (p0.y + 15).toFixed(2));
-      finishText.setAttribute('font-size', '10');
-      finishText.textContent = '200m';
-      svg.appendChild(finishText);
     }
     
     /********* SPLITS TABLE UPDATE *********/
+    // For every 100 m increment (up to the race distance), display the proportional time.
     function updateSplitsTable(raceDistance, runner1Time, runner2Time) {
       const tableBody = document.getElementById('splitTableBody');
       tableBody.innerHTML = '';
@@ -399,15 +406,14 @@
         r2_200.style.top = (pos2_200.y - 8) + 'px';
         
         // --- Lap counters ---
-        // For Track A, lap length = 400 m.
-        const lapCount1_400 = Math.floor(progress1 / 400) + 1;
-        const lapCount2_400 = Math.floor(progress2 / 400) + 1;
+        // Use Math.ceil to compute the current lap, but ensure that 0 progress shows lap 1.
+        const lapCount1_400 = progress1 > 0 ? Math.ceil(progress1 / 400) : 1;
+        const lapCount2_400 = progress2 > 0 ? Math.ceil(progress2 / 400) : 1;
         document.getElementById('lapCounter400').innerText =
           `Red: Lap ${lapCount1_400}, Blue: Lap ${lapCount2_400}`;
         
-        // For Track B, lap length = 200 m.
-        const lapCount1_200 = Math.floor(progress1 / 200) + 1;
-        const lapCount2_200 = Math.floor(progress2 / 200) + 1;
+        const lapCount1_200 = progress1 > 0 ? Math.ceil(progress1 / 200) : 1;
+        const lapCount2_200 = progress2 > 0 ? Math.ceil(progress2 / 200) : 1;
         document.getElementById('lapCounter200').innerText =
           `Green: Lap ${lapCount1_200}, Orange: Lap ${lapCount2_200}`;
         
