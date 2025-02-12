@@ -452,7 +452,7 @@
         const lapsToGo1_200 = totalLaps200 - lapCount1_200;
         const lapsToGo2_200 = totalLaps200 - lapCount2_200;
         document.getElementById('lapsToGo200').innerText =
-          `Green: Laps to Go ${lapsToGo1_200}, Orange: Laps to Go ${lapsToGo2_200}`;
+          `Green: Laps Left ${lapsToGo1_200}, Orange: Laps Left ${lapsToGo2_200}`;
         
         const gap = Math.abs(progress1 - progress2).toFixed(2);
         distanceDisplay.innerText = `Runner 1: ${progress1.toFixed(2)} m, Runner 2: ${progress2.toFixed(2)} m | Gap: ${gap} m`;
