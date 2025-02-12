@@ -15,8 +15,6 @@
       position: relative;
       width: 600px;
       height: 300px;
-      border: 1px solid #ccc;
-      margin-top: 20px;
     }
     svg {
       position: absolute;
@@ -28,7 +26,6 @@
       width: 16px;
       height: 16px;
       border-radius: 50%;
-      /* we'll position them with JS */
     }
     #runner1 {
       background: red;
@@ -83,7 +80,7 @@
     // Bottom straight: from (R, 0) to (R+100, 0)
     // Right curve (100–200m): center at (R+100, R), goes from angle -π/2 to +π/2
     // Top straight (200–300m): from (R+100, 2R) to (R, 2R)
-    // Left curve (300–400m): center at (R, R), goes from angle +π/2 back to -π/2
+    // Left curve (300–400m): center at (R, R), goes from (R,2R) back to (R,0)
     
     // We use a scale factor to convert meters to pixels.
     // First, determine the track’s bounding box in meters.
@@ -132,8 +129,10 @@
         y = 2 * R;
       } else { // d between 300 and 400
         // Left curve: semicircle with center (R, R)
-        const t = (d - 300) / 100; // t from 0 to 1
-        const angle = Math.PI / 2 - t * Math.PI; // from +90° to -90°
+        // Instead of using a direct parameter t, we reverse the parameterization so
+        // that the movement direction mirrors that of the right curve.
+        const t = 1 - (d - 300) / 100; // t goes from 1 to 0 as d increases
+        const angle = -Math.PI / 2 + t * Math.PI; // from +90° (at t=1) to -90° (at t=0)
         x = R + R * Math.cos(angle);
         y = R + R * Math.sin(angle);
       }
@@ -221,7 +220,7 @@
       
       // Position runners at the start (d = 0).
       const startPos = toPixel(getTrackPosition(0));
-      // We offset by half the runner’s size (16px/2 = 8) to center them.
+      // Offset by half the runner's size (16px/2 = 8) to center them.
       runner1.style.left = (startPos.x - 8) + 'px';
       runner1.style.top = (startPos.y - 8) + 'px';
       runner2.style.left = (startPos.x - 8) + 'px';
