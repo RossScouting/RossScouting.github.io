@@ -80,7 +80,8 @@
     // Bottom straight: from (R, 0) to (R+100, 0)
     // Right curve (100–200m): center at (R+100, R), goes from angle -π/2 to +π/2
     // Top straight (200–300m): from (R+100, 2R) to (R, 2R)
-    // Left curve (300–400m): center at (R, R), goes from (R,2R) back to (R,0)
+    // Left curve (300–400m): center at (R, R), goes from angle +π/2 back to -π/2
+    // This defines a clockwise track.
     
     // We use a scale factor to convert meters to pixels.
     // First, determine the track’s bounding box in meters.
@@ -110,7 +111,7 @@
     }
     
     // Function: Given progress d (in meters along the track, 0 ≤ d ≤ 400),
-    // return the (x, y) coordinates in meter-space.
+    // return the (x, y) coordinates in meter-space for the clockwise track.
     function getTrackPosition(d) {
       let x, y;
       if (d <= 100) {
@@ -129,14 +130,20 @@
         y = 2 * R;
       } else { // d between 300 and 400
         // Left curve: semicircle with center (R, R)
-        // Instead of using a direct parameter t, we reverse the parameterization so
-        // that the movement direction mirrors that of the right curve.
-        const t = 1 - (d - 300) / 100; // t goes from 1 to 0 as d increases
-        const angle = -Math.PI / 2 + t * Math.PI; // from +90° (at t=1) to -90° (at t=0)
+        const t = (d - 300) / 100; // t from 0 to 1
+        const angle = Math.PI / 2 - t * Math.PI; // from +90° to -90°
         x = R + R * Math.cos(angle);
         y = R + R * Math.sin(angle);
       }
       return { x, y };
+    }
+    
+    // To get counter-clockwise movement along the same track shape,
+    // we simply invert the progress value along a 400m lap.
+    function getCounterClockwisePosition(progress) {
+      // Invert progress (mod 400) so that movement is reversed.
+      const invertedProgress = (400 - (progress % 400)) % 400;
+      return getTrackPosition(invertedProgress);
     }
     
     /*************** Drawing the Track ****************/
@@ -144,7 +151,7 @@
       const svg = document.getElementById('trackSVG');
       svg.innerHTML = ''; // clear previous drawing
       
-      // Compute key positions in pixel coordinates.
+      // Compute key positions in pixel coordinates using the clockwise positions.
       const p0   = toPixel(getTrackPosition(0));
       const p100 = toPixel(getTrackPosition(100));
       const p200 = toPixel(getTrackPosition(200));
@@ -155,17 +162,12 @@
       const radiusPx = R * S;
       
       // Build an SVG path representing the track centerline.
-      // We use straight lines for the straights and SVG arc commands for the curves.
       let pathStr = `M ${p0.x.toFixed(2)} ${p0.y.toFixed(2)} `;
-      // Bottom straight (0 to 100m)
       pathStr += `L ${p100.x.toFixed(2)} ${p100.y.toFixed(2)} `;
-      // Right curve (100 to 200m): arc with radius (radiusPx)
       pathStr += `A ${radiusPx.toFixed(2)} ${radiusPx.toFixed(2)} 0 0,1 ${p200.x.toFixed(2)} ${p200.y.toFixed(2)} `;
-      // Top straight (200 to 300m)
       pathStr += `L ${p300.x.toFixed(2)} ${p300.y.toFixed(2)} `;
-      // Left curve (300 to 400m) back to start:
       pathStr += `A ${radiusPx.toFixed(2)} ${radiusPx.toFixed(2)} 0 0,1 ${p0.x.toFixed(2)} ${p0.y.toFixed(2)} `;
-      pathStr += 'Z'; // close path
+      pathStr += 'Z';
       
       const pathElem = document.createElementNS('http://www.w3.org/2000/svg', 'path');
       pathElem.setAttribute('d', pathStr);
@@ -194,7 +196,6 @@
         marker.setAttribute('fill', 'blue');
         svg.appendChild(marker);
         
-        // Label the marker.
         const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
         text.setAttribute('x', (pos.x + 5).toFixed(2));
         text.setAttribute('y', (pos.y - 5).toFixed(2));
@@ -206,7 +207,6 @@
     
     /*************** Race Animation ****************/
     function startRace() {
-      // Read user inputs.
       const raceDistance = parseFloat(document.getElementById('raceDistance').value);
       const runner1Time = parseFloat(document.getElementById('runner1Time').value);
       const runner2Time = parseFloat(document.getElementById('runner2Time').value);
@@ -218,9 +218,8 @@
       const runner2 = document.getElementById('runner2');
       const raceTimer = document.getElementById('raceTimer');
       
-      // Position runners at the start (d = 0).
-      const startPos = toPixel(getTrackPosition(0));
-      // Offset by half the runner's size (16px/2 = 8) to center them.
+      // Position runners at the start using the counter-clockwise position.
+      const startPos = toPixel(getCounterClockwisePosition(0));
       runner1.style.left = (startPos.x - 8) + 'px';
       runner1.style.top = (startPos.y - 8) + 'px';
       runner2.style.left = (startPos.x - 8) + 'px';
@@ -232,20 +231,20 @@
         let elapsed = (timestamp - startTime) / 1000;
         raceTimer.textContent = `Time: ${elapsed.toFixed(2)}s`;
         
-        // For each runner, compute progress (in meters along the track).
-        // They stop when their elapsed time reaches their finish time.
+        // Compute each runner's progress (in meters along the race).
         const progress1 = Math.min((elapsed / runner1Time) * raceDistance, raceDistance);
         const progress2 = Math.min((elapsed / runner2Time) * raceDistance, raceDistance);
         
-        const pos1 = toPixel(getTrackPosition(progress1 % 400));
-        const pos2 = toPixel(getTrackPosition(progress2 % 400));
+        // Use the counter-clockwise mapping for runner positions.
+        const pos1 = toPixel(getCounterClockwisePosition(progress1));
+        const pos2 = toPixel(getCounterClockwisePosition(progress2));
         
         runner1.style.left = `${pos1.x - 8}px`;
         runner1.style.top = `${pos1.y - 8}px`;
         runner2.style.left = `${pos2.x - 8}px`;
         runner2.style.top = `${pos2.y - 8}px`;
         
-        // Continue animating until both runners have finished.
+        // Continue animating until both runners finish.
         if (progress1 < raceDistance || progress2 < raceDistance) {
           requestAnimationFrame(updateRace);
         }
