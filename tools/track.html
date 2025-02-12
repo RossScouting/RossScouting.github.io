@@ -11,26 +11,30 @@
       flex-direction: column;
       align-items: center;
     }
-    /* Container that holds the splits table and the tracks */
-    #raceDisplay {
-      display: flex;
-      align-items: flex-start;
-      gap: 20px;
-      margin-top: 10px;
+    /* Controls and splits table */
+    #controls {
+      margin: 10px;
+    }
+    label {
+      margin: 5px;
     }
     #splitTableContainer {
-      /* Splits table remains on the left */
-      margin-top: 10px;
+      margin-right: 20px;
     }
     table {
       border-collapse: collapse;
     }
     th, td {
-      border: 1px solid #000;
+      border: 1px solid #333;
       padding: 4px;
       text-align: center;
     }
-    /* Wrapper for the two tracks (400m on top, 200m below) */
+    /* Overall race display layout */
+    #raceDisplay {
+      display: flex;
+      align-items: flex-start;
+      gap: 20px;
+    }
     .track-wrapper {
       display: flex;
       flex-direction: column;
@@ -53,69 +57,59 @@
       height: 16px;
       border-radius: 50%;
     }
-    /* Runners for 400m track */
-    #runner1_400 {
-      background: red;
-    }
-    #runner2_400 {
-      background: blue;
-    }
-    /* Runners for 200m track */
-    #runner1_200 {
-      background: green;
-    }
-    #runner2_200 {
-      background: orange;
-    }
+    /* Colors for Track A (400m) runners */
+    #runner1_400 { background: red; }
+    #runner2_400 { background: blue; }
+    /* Colors for Track B (200m) runners */
+    #runner1_200 { background: green; }
+    #runner2_200 { background: orange; }
     #raceTimer {
       font-size: 20px;
       margin: 10px;
-    }
-    label {
-      margin: 5px;
     }
   </style>
 </head>
 <body>
   <h1>Track and Field Simulator</h1>
-  <div>
-    <label>Race Distance (m) for 400m track:
-      <input type="number" id="raceDistance" value="400" />
+  <div id="controls">
+    <!-- These inputs now describe the overall race distance and finishing times -->
+    <label>Race Distance (m):
+      <input type="number" id="raceDistance" value="800" />
     </label>
-    <label>Runner 1 Time (s) for 400m:
-      <input type="number" id="runner1Time" value="50" />
+    <label>Runner 1 Time (s):
+      <input type="number" id="runner1Time" value="120" />
     </label>
-    <label>Runner 2 Time (s) for 400m:
-      <input type="number" id="runner2Time" value="55" />
+    <label>Runner 2 Time (s):
+      <input type="number" id="runner2Time" value="130" />
     </label>
     <button onclick="startRace()">Start Race</button>
   </div>
   <div id="raceTimer">Time: 0.00s</div>
   
   <div id="raceDisplay">
-    <!-- Splits Table remains on the left -->
+    <!-- Splits Table (left side) -->
     <div id="splitTableContainer">
       <table id="splitTable">
-         <thead>
-           <tr>
-             <th>Distance (m)</th>
-             <th>Runner 1 (s)</th>
-             <th>Runner 2 (s)</th>
-           </tr>
-         </thead>
-         <tbody id="splitTableBody"></tbody>
+        <thead>
+          <tr>
+            <th>Distance (m)</th>
+            <th>Runner 1 (s)</th>
+            <th>Runner 2 (s)</th>
+          </tr>
+        </thead>
+        <tbody id="splitTableBody"></tbody>
       </table>
     </div>
     
     <!-- Tracks wrapper (right side) -->
     <div class="track-wrapper">
-      <!-- 400m Track Container -->
+      <!-- Track A: 400m lap -->
       <div class="track-container" id="trackContainer400">
         <svg id="trackSVG400" width="600" height="300"></svg>
         <div class="runner" id="runner1_400"></div>
         <div class="runner" id="runner2_400"></div>
       </div>
-      <!-- 200m Track Container (same size as 400m, but with labels scaled by 0.5) -->
+      <!-- Track B: 200m lap -->
       <div class="track-container" id="trackContainer200">
         <svg id="trackSVG200" width="600" height="300"></svg>
         <div class="runner" id="runner1_200"></div>
@@ -125,97 +119,107 @@
   </div>
   
   <script>
-    /*************** COMMON GEOMETRY (for physical drawing) ****************/
-    // We use the same physical track geometry as the 400m track.
+    /********* COMMON PHYSICAL TRACK GEOMETRY *********/
+    // We use a standard 400 m track “shape” for drawing.
+    // (S is our scale: pixels per meter.)
     const S = 3.6; // pixels per meter
-    const straightLength400 = 100; // meters per straight for 400m track
-    const R400 = 100 / Math.PI;    // radius for curves (~31.83 m)
-    const trackWidth400_m = 100 + 2 * R400;
-    const trackHeight400_m = 2 * R400;
-    const containerWidth400 = 600;
-    const containerHeight400 = 300;
-    const offsetX400 = (containerWidth400 - trackWidth400_m * S) / 2;
-    const offsetY400 = (containerHeight400 - trackHeight400_m * S) / 2;
+    const straightLength = 100; // meters for each straight on a 400m track
+    const R = 100 / Math.PI;    // radius for curves (≈31.83 m)
+    const trackWidth_m = 100 + 2 * R;
+    const trackHeight_m = 2 * R;
+    const containerWidth = 600;
+    const containerHeight = 300;
+    const offsetX = (containerWidth - trackWidth_m * S) / 2;
+    const offsetY = (containerHeight - trackHeight_m * S) / 2;
     
-    // Convert meter coordinates to pixel coordinates (for both tracks)
-    function toPixel400(pos) {
+    // Convert physical (meter) coordinates to pixel positions.
+    function toPixel(pos) {
       return {
-        x: pos.x * S + offsetX400,
-        y: pos.y * S + offsetY400
+        x: pos.x * S + offsetX,
+        y: pos.y * S + offsetY
       };
     }
     
-    /*************** 400m TRACK FUNCTIONS ****************/
-    // This function returns points along the clockwise track outline (physical geometry)
+    /********* 400m TRACK GEOMETRY & POSITIONING *********/
+    // getTrackPosition returns a point along the physical 400m track outline (clockwise)
     function getTrackPosition(d) {
       let x, y;
       if (d <= 100) {
-        // Bottom straight: from (R400,0) to (R400+100, 0)
-        x = R400 + d;
+        x = R + d;
         y = 0;
       } else if (d <= 200) {
-        // Right curve: semicircle with center (R400+100, R400)
         const t = (d - 100) / 100;
-        const angle = -Math.PI/2 + t * Math.PI;
-        x = (R400 + 100) + R400 * Math.cos(angle);
-        y = R400 + R400 * Math.sin(angle);
+        const angle = -Math.PI / 2 + t * Math.PI;
+        x = (R + 100) + R * Math.cos(angle);
+        y = R + R * Math.sin(angle);
       } else if (d <= 300) {
-        // Top straight: from (R400+100, 2*R400) to (R400, 2*R400)
-        x = (R400 + 100) - (d - 200);
-        y = 2 * R400;
+        x = (R + 100) - (d - 200);
+        y = 2 * R;
       } else { // d in [300,400]
-        // Left curve: semicircle with center (R400, R400)
         const t = (d - 300) / 100;
-        const angle = Math.PI/2 - t * Math.PI;
-        x = R400 + R400 * Math.cos(angle);
-        y = R400 + R400 * Math.sin(angle);
+        const angle = Math.PI / 2 - t * Math.PI;
+        x = R + R * Math.cos(angle);
+        y = R + R * Math.sin(angle);
       }
       return { x, y };
     }
     
-    // For runner positions on the 400m track (counterclockwise)
+    // getCCWTrackPosition maps a runner’s progress (in meters along a lap) to a point on the 400m track,
+    // assuming counterclockwise running. (It wraps progress using modulo 400.)
     function getCCWTrackPosition(d) {
       d = d % 400;
       let x, y;
       if (d <= 100) {
         const u = d / 100;
-        const angle = -Math.PI/2 + u * Math.PI;
-        x = R400 - R400 * Math.cos(angle);
-        y = R400 + R400 * Math.sin(angle);
+        const angle = -Math.PI / 2 + u * Math.PI;
+        x = R - R * Math.cos(angle);
+        y = R + R * Math.sin(angle);
       } else if (d <= 200) {
         const u = (d - 100) / 100;
-        x = R400 + u * 100;
-        y = 2 * R400;
+        x = R + u * 100;
+        y = 2 * R;
       } else if (d <= 300) {
         const u = (d - 200) / 100;
-        const angle = Math.PI/2 - u * Math.PI;
-        x = (R400 + 100) + R400 * Math.cos(angle);
-        y = R400 + R400 * Math.sin(angle);
+        const angle = Math.PI / 2 - u * Math.PI;
+        x = (R + 100) + R * Math.cos(angle);
+        y = R + R * Math.sin(angle);
       } else {
         const u = (d - 300) / 100;
-        x = (R400 + 100) - u * 100;
+        x = (R + 100) - u * 100;
         y = 0;
       }
       return { x, y };
     }
     
-    // Draw the 400m track (using its physical geometry and original labels)
+    /********* 200m TRACK POSITIONING *********/
+    // On a 200m lap track, a full lap is 200 m (not 400).
+    // To simulate this on our physical 400m drawing, we “double” the runner’s lap progress.
+    // That is, a 200 m lap in race terms corresponds to a 400 m lap physically.
+    function getCCWTrackPosition200(progress) {
+      // progress is in [0, raceDistance] (for the 200m race simulation)
+      // Compute lap progress modulo 200, then scale by 2:
+      let lapProgress = progress % 200;
+      let physicalProgress = lapProgress * 2;
+      return getCCWTrackPosition(physicalProgress);
+    }
+    
+    /********* DRAWING THE TRACKS *********/
+    // Draw the 400m track outline (with markers at physical 0, 100, 200, 300 m).
     function drawTrack400() {
       const svg = document.getElementById('trackSVG400');
       svg.innerHTML = '';
       
-      const p0   = toPixel400(getTrackPosition(0));
-      const p100 = toPixel400(getTrackPosition(100));
-      const p200 = toPixel400(getTrackPosition(200));
-      const p300 = toPixel400(getTrackPosition(300));
-      const radiusPx = R400 * S;
+      const p0 = toPixel(getTrackPosition(0));
+      const p100 = toPixel(getTrackPosition(100));
+      const p200 = toPixel(getTrackPosition(200));
+      const p300 = toPixel(getTrackPosition(300));
+      const radiusPx = R * S;
       
       let pathStr = `M ${p0.x.toFixed(2)} ${p0.y.toFixed(2)} `;
       pathStr += `L ${p100.x.toFixed(2)} ${p100.y.toFixed(2)} `;
       pathStr += `A ${radiusPx.toFixed(2)} ${radiusPx.toFixed(2)} 0 0,1 ${p200.x.toFixed(2)} ${p200.y.toFixed(2)} `;
       pathStr += `L ${p300.x.toFixed(2)} ${p300.y.toFixed(2)} `;
-      pathStr += `A ${radiusPx.toFixed(2)} ${radiusPx.toFixed(2)} 0 0,1 ${p0.x.toFixed(2)} ${p0.y.toFixed(2)} `;
-      pathStr += 'Z';
+      pathStr += `A ${radiusPx.toFixed(2)} ${radiusPx.toFixed(2)} 0 0,1 ${p0.x.toFixed(2)} ${p0.y.toFixed(2)} Z`;
       
       const pathElem = document.createElementNS('http://www.w3.org/2000/svg', 'path');
       pathElem.setAttribute('d', pathStr);
@@ -234,9 +238,9 @@
       finishLine.setAttribute('stroke-width', '2');
       svg.appendChild(finishLine);
       
-      // Place markers at physical distances 0, 100, 200, and 300 m.
+      // Markers at 0, 100, 200, and 300 m.
       [0, 100, 200, 300].forEach(d => {
-        const pos = toPixel400(getTrackPosition(d));
+        const pos = toPixel(getTrackPosition(d));
         const marker = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
         marker.setAttribute('cx', pos.x.toFixed(2));
         marker.setAttribute('cy', pos.y.toFixed(2));
@@ -248,7 +252,7 @@
         text.setAttribute('x', (pos.x + 5).toFixed(2));
         text.setAttribute('y', (pos.y - 5).toFixed(2));
         text.setAttribute('font-size', '10');
-        // For clarity, swap labels for 100 and 300 as in the original code.
+        // (Optional: swap labels for clarity as in some track drawings.)
         let label = d;
         if (d === 100) label = 300;
         else if (d === 300) label = 100;
@@ -257,35 +261,24 @@
       });
     }
     
-    /*************** 200m TRACK FUNCTIONS ****************/
-    // For the 200m track, we use the same physical drawing (and toPixel400) 
-    // but the race lap is 200m. (Physically, the 400m outline now represents 200m.)
-    // In other words, a given race progress (in m) on the 200m track is doubled
-    // to get the corresponding physical position.
-    function getRunnerPosition200(progress) {
-      // progress is in [0,200]; multiply by 2 to map [0,200] → [0,400]
-      let physicalProgress = (progress * 2) % 400;
-      return getCCWTrackPosition(physicalProgress);
-    }
-    
-    // Draw the 200m track using the same physical outline but with scaled labels.
+    // Draw the 200m track outline.
+    // We use the same physical outline as for 400m,
+    // but the markers are scaled by 0.5 to show lap distances of 0, 50, 100, and 150 m.
     function drawTrack200() {
       const svg = document.getElementById('trackSVG200');
       svg.innerHTML = '';
       
-      // Reuse the same outline as the 400m track.
-      const p0   = toPixel400(getTrackPosition(0));
-      const p100 = toPixel400(getTrackPosition(100));
-      const p200 = toPixel400(getTrackPosition(200));
-      const p300 = toPixel400(getTrackPosition(300));
-      const radiusPx = R400 * S;
+      const p0 = toPixel(getTrackPosition(0));
+      const p100 = toPixel(getTrackPosition(100));
+      const p200 = toPixel(getTrackPosition(200));
+      const p300 = toPixel(getTrackPosition(300));
+      const radiusPx = R * S;
       
       let pathStr = `M ${p0.x.toFixed(2)} ${p0.y.toFixed(2)} `;
       pathStr += `L ${p100.x.toFixed(2)} ${p100.y.toFixed(2)} `;
       pathStr += `A ${radiusPx.toFixed(2)} ${radiusPx.toFixed(2)} 0 0,1 ${p200.x.toFixed(2)} ${p200.y.toFixed(2)} `;
       pathStr += `L ${p300.x.toFixed(2)} ${p300.y.toFixed(2)} `;
-      pathStr += `A ${radiusPx.toFixed(2)} ${radiusPx.toFixed(2)} 0 0,1 ${p0.x.toFixed(2)} ${p0.y.toFixed(2)} `;
-      pathStr += 'Z';
+      pathStr += `A ${radiusPx.toFixed(2)} ${radiusPx.toFixed(2)} 0 0,1 ${p0.x.toFixed(2)} ${p0.y.toFixed(2)} Z`;
       
       const pathElem = document.createElementNS('http://www.w3.org/2000/svg', 'path');
       pathElem.setAttribute('d', pathStr);
@@ -294,7 +287,7 @@
       pathElem.setAttribute('stroke-width', '2');
       svg.appendChild(pathElem);
       
-      // Draw the start/finish line at p0.
+      // Start/finish line.
       const finishLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');
       finishLine.setAttribute('x1', p0.x.toFixed(2));
       finishLine.setAttribute('y1', (p0.y - 10).toFixed(2));
@@ -304,10 +297,9 @@
       finishLine.setAttribute('stroke-width', '2');
       svg.appendChild(finishLine);
       
-      // Place markers at physical distances 0, 100, 200, 300 m,
-      // but label them as 0, 50, 100, and 150 (since the physical 400m lap represents 200m).
+      // Markers: physical distances 0, 100, 200, 300 m become 0, 50, 100, and 150 m on the 200m track.
       [0, 100, 200, 300].forEach(d => {
-        const pos = toPixel400(getTrackPosition(d));
+        const pos = toPixel(getTrackPosition(d));
         const marker = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
         marker.setAttribute('cx', pos.x.toFixed(2));
         marker.setAttribute('cy', pos.y.toFixed(2));
@@ -319,12 +311,11 @@
         text.setAttribute('x', (pos.x + 5).toFixed(2));
         text.setAttribute('y', (pos.y - 5).toFixed(2));
         text.setAttribute('font-size', '10');
-        // Scale the label by 0.5 (e.g., physical 100m → 50m)
         text.textContent = (d * 0.5).toFixed(0) + 'm';
         svg.appendChild(text);
       });
       
-      // Optionally, add a finish-line label for 200m.
+      // Optionally, label the finish line.
       const finishText = document.createElementNS('http://www.w3.org/2000/svg', 'text');
       finishText.setAttribute('x', (p0.x - 30).toFixed(2));
       finishText.setAttribute('y', (p0.y + 15).toFixed(2));
@@ -333,19 +324,19 @@
       svg.appendChild(finishText);
     }
     
-    /*************** SPLITS TABLE UPDATE ****************/
+    /********* SPLITS TABLE UPDATE *********/
+    // For every 100 m increment (up to the race distance), display the proportional time.
     function updateSplitsTable(raceDistance, runner1Time, runner2Time) {
       const tableBody = document.getElementById('splitTableBody');
       tableBody.innerHTML = '';
-      // For every 100 m on the 400m race (including 0 and finish)
       for (let d = 0; d <= raceDistance; d += 100) {
         const row = document.createElement('tr');
         const cellDistance = document.createElement('td');
         cellDistance.textContent = d;
         const cellRunner1 = document.createElement('td');
-        cellRunner1.textContent = ((runner1Time * (d / raceDistance))).toFixed(2);
+        cellRunner1.textContent = (runner1Time * (d / raceDistance)).toFixed(2);
         const cellRunner2 = document.createElement('td');
-        cellRunner2.textContent = ((runner2Time * (d / raceDistance))).toFixed(2);
+        cellRunner2.textContent = (runner2Time * (d / raceDistance)).toFixed(2);
         row.appendChild(cellDistance);
         row.appendChild(cellRunner1);
         row.appendChild(cellRunner2);
@@ -353,9 +344,9 @@
       }
     }
     
-    /*************** RACE ANIMATION (both tracks run concurrently) ****************/
+    /********* RACE ANIMATION *********/
+    // This function runs the simulation on both tracks concurrently.
     function startRace() {
-      // 400m track settings (from user input)
       const raceDistance = parseFloat(document.getElementById('raceDistance').value);
       const runner1Time = parseFloat(document.getElementById('runner1Time').value);
       const runner2Time = parseFloat(document.getElementById('runner2Time').value);
@@ -364,68 +355,45 @@
       drawTrack400();
       drawTrack200();
       
-      // Get runner elements for 400m track
-      const runner1_400 = document.getElementById('runner1_400');
-      const runner2_400 = document.getElementById('runner2_400');
-      // Get runner elements for 200m track
-      const runner1_200 = document.getElementById('runner1_200');
-      const runner2_200 = document.getElementById('runner2_200');
-      
-      const raceTimer = document.getElementById('raceTimer');
-      
-      // Position runners at the start (using counterclockwise mapping)
-      let startPos400 = toPixel400(getCCWTrackPosition(0));
-      runner1_400.style.left = (startPos400.x - 8) + 'px';
-      runner1_400.style.top = (startPos400.y - 8) + 'px';
-      runner2_400.style.left = (startPos400.x - 8) + 'px';
-      runner2_400.style.top = (startPos400.y - 8) + 'px';
-      
-      let startPos200 = toPixel400(getCCWTrackPosition(0)); // same physical start
-      runner1_200.style.left = (startPos200.x - 8) + 'px';
-      runner1_200.style.top = (startPos200.y - 8) + 'px';
-      runner2_200.style.left = (startPos200.x - 8) + 'px';
-      runner2_200.style.top = (startPos200.y - 8) + 'px';
+      // Get runner elements.
+      const r1_400 = document.getElementById('runner1_400');
+      const r2_400 = document.getElementById('runner2_400');
+      const r1_200 = document.getElementById('runner1_200');
+      const r2_200 = document.getElementById('runner2_200');
+      const timerDisplay = document.getElementById('raceTimer');
       
       let startTime = null;
-      function updateRace(timestamp) {
+      function update(timestamp) {
         if (!startTime) startTime = timestamp;
-        let elapsed = (timestamp - startTime) / 1000;
-        raceTimer.textContent = `Time: ${elapsed.toFixed(2)}s`;
+        const elapsed = (timestamp - startTime) / 1000; // seconds
+        timerDisplay.textContent = `Time: ${elapsed.toFixed(2)}s`;
         
-        // --- 400m track progress (clamped to the user’s raceDistance) ---
-        const progress400_runner1 = Math.min((elapsed / runner1Time) * 400, raceDistance);
-        const progress400_runner2 = Math.min((elapsed / runner2Time) * 400, raceDistance);
-        const pos400_runner1 = toPixel400(getCCWTrackPosition(progress400_runner1));
-        const pos400_runner2 = toPixel400(getCCWTrackPosition(progress400_runner2));
-        runner1_400.style.left = `${pos400_runner1.x - 8}px`;
-        runner1_400.style.top = `${pos400_runner1.y - 8}px`;
-        runner2_400.style.left = `${pos400_runner2.x - 8}px`;
-        runner2_400.style.top = `${pos400_runner2.y - 8}px`;
+        // Calculate each runner’s race progress (in meters)
+        const progress1 = Math.min((elapsed / runner1Time) * raceDistance, raceDistance);
+        const progress2 = Math.min((elapsed / runner2Time) * raceDistance, raceDistance);
         
-        // --- 200m track progress (fixed to 200 m race) ---
-        // Using the same pace as the 400m race, a runner finishing 400m in runnerTime
-        // would finish 200m in half that time. (The calculation below uses *400 and clamps at 200.)
-        const progress200_runner1 = Math.min((elapsed / runner1Time) * 400, 200);
-        const progress200_runner2 = Math.min((elapsed / runner2Time) * 400, 200);
-        // Map the 200m race progress to physical position (doubling the progress)
-        const pos200_runner1 = toPixel400(getRunnerPosition200(progress200_runner1));
-        const pos200_runner2 = toPixel400(getRunnerPosition200(progress200_runner2));
-        runner1_200.style.left = `${pos200_runner1.x - 8}px`;
-        runner1_200.style.top = `${pos200_runner1.y - 8}px`;
-        runner2_200.style.left = `${pos200_runner2.x - 8}px`;
-        runner2_200.style.top = `${pos200_runner2.y - 8}px`;
+        // --- Track A (400m lap) ---
+        const pos1_400 = toPixel(getCCWTrackPosition(progress1));
+        const pos2_400 = toPixel(getCCWTrackPosition(progress2));
+        r1_400.style.left = (pos1_400.x - 8) + 'px';
+        r1_400.style.top = (pos1_400.y - 8) + 'px';
+        r2_400.style.left = (pos2_400.x - 8) + 'px';
+        r2_400.style.top = (pos2_400.y - 8) + 'px';
         
-        // Continue animating until both races finish.
-        if (
-          progress400_runner1 < raceDistance ||
-          progress400_runner2 < raceDistance ||
-          progress200_runner1 < 200 ||
-          progress200_runner2 < 200
-        ) {
-          requestAnimationFrame(updateRace);
+        // --- Track B (200m lap) ---
+        const pos1_200 = toPixel(getCCWTrackPosition200(progress1));
+        const pos2_200 = toPixel(getCCWTrackPosition200(progress2));
+        r1_200.style.left = (pos1_200.x - 8) + 'px';
+        r1_200.style.top = (pos1_200.y - 8) + 'px';
+        r2_200.style.left = (pos2_200.x - 8) + 'px';
+        r2_200.style.top = (pos2_200.y - 8) + 'px';
+        
+        // Continue the animation until both runners finish the race.
+        if (progress1 < raceDistance || progress2 < raceDistance) {
+          requestAnimationFrame(update);
         }
       }
-      requestAnimationFrame(updateRace);
+      requestAnimationFrame(update);
     }
   </script>
 </body>
