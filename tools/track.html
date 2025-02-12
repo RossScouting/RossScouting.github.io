@@ -218,7 +218,13 @@
         text.setAttribute('x', (pos.x + 5).toFixed(2));
         text.setAttribute('y', (pos.y - 5).toFixed(2));
         text.setAttribute('font-size', '10');
-        text.textContent = d + 'm';
+
+         // Swap the labels for 100 and 300.
+        let label = d;
+        if (d === 100) label = 300;
+        else if (d === 300) label = 100;
+
+        text.textContent = label + 'm';
         svg.appendChild(text);
       });
     }
