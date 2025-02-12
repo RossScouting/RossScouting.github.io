@@ -116,10 +116,10 @@
     <button onclick="startRace()">Start Race</button>
   </div>
   <div id="raceTimer">Time: 00:00.00</div>
-  <!-- New distance display -->
-  <div id="distanceDisplay">Runner distances and gap will appear here.</div>
   
   <div id="raceDisplay">
+    <!-- New distance display -->
+    <div id="distanceDisplay">Runner distances and gap will appear here.</div>
     <!-- Splits Table (left side) -->
     <div id="splitTableContainer">
       <table id="splitTable">
@@ -136,6 +136,7 @@
     
     <!-- Tracks wrapper (right side) -->
     <div class="track-wrapper">
+      <div id="winAlert"></div>
       <!-- Track A: 400m lap -->
       <div class="track-container" id="trackContainer400">
         <svg id="trackSVG400" width="600" height="300"></svg>
