@@ -205,7 +205,7 @@
       svg.appendChild(finishLine);
       
       // Place markers at 0, 100, 200, and 300m (using clockwise positions).
-      [0, 300, 200, 100].forEach(d => {
+      [0, 100, 200, 300].forEach(d => {
         const pos = toPixel(getTrackPosition(d));
         const marker = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
         marker.setAttribute('cx', pos.x.toFixed(2));
