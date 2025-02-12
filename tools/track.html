@@ -164,6 +164,9 @@
   </div>
   
   <script>
+    //Binary Toggle for winning alert.
+    var winnerToggle  = 0;
+
     // Helper function: parse time strings in mm:ss (or ss) format.
     function parseTime(str) {
       if (str.indexOf(':') !== -1) {
@@ -456,8 +459,14 @@
         
         const gap = Math.abs(progress1 - progress2).toFixed(2);
         distanceDisplay.innerText = `Runner 1: ${progress1.toFixed(2)} m, Runner 2: ${progress2.toFixed(2)} m | Gap: ${gap} m`;
-        
-        if (progress1 < raceDistance || progress2 < raceDistance) {
+
+        if (progress1 < raceDistance && progress2 < raceDistance) {
+          requestAnimationFrame(update);
+        } else if (progress1 < raceDistance || progress2 < raceDistance) {
+          if (winnerToggle == 0) {
+            alert("Race won by " + gap + " meters");
+            winnerToggle = 1;
+          }
           requestAnimationFrame(update);
         }
       }
