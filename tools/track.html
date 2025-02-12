@@ -469,7 +469,7 @@
           requestAnimationFrame(update);
         } else if (progress1 < raceDistance || progress2 < raceDistance) {
           if (winnerToggle == 0) {
-            distanceDisplay.innerText = "The race was won by " + gap + " meters.";
+            winAlert.innerText = "The race was won by " + gap + " meters.";
             winnerToggle = 1;
           }
           requestAnimationFrame(update);
