@@ -67,6 +67,14 @@
       font-size: 20px;
       margin: 10px;
     }
+    /* New distance display styling */
+    #distanceDisplay {
+      font-size: 18px;
+      margin: 5px;
+      background: rgba(220,220,220,0.8);
+      padding: 5px;
+      border-radius: 5px;
+    }
     /* Lap counter styling */
     .lap-counter {
       position: absolute;
@@ -97,6 +105,8 @@
     <button onclick="startRace()">Start Race</button>
   </div>
   <div id="raceTimer">Time: 0.00s</div>
+  <!-- New distance display -->
+  <div id="distanceDisplay">Runner distances and gap will appear here.</div>
   
   <div id="raceDisplay">
     <!-- Splits Table (left side) -->
@@ -386,6 +396,7 @@
       const r1_200 = document.getElementById('runner1_200');
       const r2_200 = document.getElementById('runner2_200');
       const timerDisplay = document.getElementById('raceTimer');
+      const distanceDisplay = document.getElementById('distanceDisplay');
       
       let startTime = null;
       function update(timestamp) {
@@ -414,17 +425,20 @@
         r2_200.style.top = (pos2_200.y - 8) + 'px';
         
         // --- Lap counters ---
-        // For Track A, use a 400 m lap.
         const lapCount1_400 = progress1 > 0 ? Math.ceil(progress1 / 400) : 1;
         const lapCount2_400 = progress2 > 0 ? Math.ceil(progress2 / 400) : 1;
         document.getElementById('lapCounter400').innerText =
           `Red: Lap ${lapCount1_400}, Blue: Lap ${lapCount2_400}`;
         
-        // For Track B, use a 200 m lap.
         const lapCount1_200 = progress1 > 0 ? Math.ceil(progress1 / 200) : 1;
         const lapCount2_200 = progress2 > 0 ? Math.ceil(progress2 / 200) : 1;
         document.getElementById('lapCounter200').innerText =
           `Green: Lap ${lapCount1_200}, Orange: Lap ${lapCount2_200}`;
+        
+        // --- Distance display ---
+        // Display the overall distance run by each runner and the gap between them.
+        const gap = Math.abs(progress1 - progress2).toFixed(2);
+        distanceDisplay.innerText = `Runner 1: ${progress1.toFixed(2)} m, Runner 2: ${progress2.toFixed(2)} m | Gap: ${gap} m`;
         
         // Continue the animation until both runners finish the race.
         if (progress1 < raceDistance || progress2 < raceDistance) {
