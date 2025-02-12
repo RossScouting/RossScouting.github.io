@@ -67,12 +67,24 @@
       font-size: 20px;
       margin: 10px;
     }
+    /* Lap counter styling */
+    .lap-counter {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 20px;
+      background: rgba(255, 255, 255, 0.7);
+      padding: 5px;
+      border-radius: 5px;
+      pointer-events: none;
+    }
   </style>
 </head>
 <body>
   <h1>Track and Field Simulator</h1>
   <div id="controls">
-    <!-- These inputs now describe the overall race distance and finishing times -->
+    <!-- Overall race inputs: race distance and finishing times -->
     <label>Race Distance (m):
       <input type="number" id="raceDistance" value="800" />
     </label>
@@ -108,12 +120,16 @@
         <svg id="trackSVG400" width="600" height="300"></svg>
         <div class="runner" id="runner1_400"></div>
         <div class="runner" id="runner2_400"></div>
+        <!-- Lap counter overlaid in center -->
+        <div class="lap-counter" id="lapCounter400"></div>
       </div>
       <!-- Track B: 200m lap -->
       <div class="track-container" id="trackContainer200">
         <svg id="trackSVG200" width="600" height="300"></svg>
         <div class="runner" id="runner1_200"></div>
         <div class="runner" id="runner2_200"></div>
+        <!-- Lap counter overlaid in center -->
+        <div class="lap-counter" id="lapCounter200"></div>
       </div>
     </div>
   </div>
@@ -121,7 +137,6 @@
   <script>
     /********* COMMON PHYSICAL TRACK GEOMETRY *********/
     // We use a standard 400 m track “shape” for drawing.
-    // (S is our scale: pixels per meter.)
     const S = 3.6; // pixels per meter
     const straightLength = 100; // meters for each straight on a 400m track
     const R = 100 / Math.PI;    // radius for curves (≈31.83 m)
@@ -141,7 +156,7 @@
     }
     
     /********* 400m TRACK GEOMETRY & POSITIONING *********/
-    // getTrackPosition returns a point along the physical 400m track outline (clockwise)
+    // Returns a point along the physical 400m track outline (clockwise)
     function getTrackPosition(d) {
       let x, y;
       if (d <= 100) {
@@ -164,8 +179,8 @@
       return { x, y };
     }
     
-    // getCCWTrackPosition maps a runner’s progress (in meters along a lap) to a point on the 400m track,
-    // assuming counterclockwise running. (It wraps progress using modulo 400.)
+    // Maps a runner’s progress (in meters along a lap) to a point on the 400m track,
+    // assuming counterclockwise running (wraps progress modulo 400).
     function getCCWTrackPosition(d) {
       d = d % 400;
       let x, y;
@@ -192,12 +207,11 @@
     }
     
     /********* 200m TRACK POSITIONING *********/
-    // On a 200m lap track, a full lap is 200 m (not 400).
-    // To simulate this on our physical 400m drawing, we “double” the runner’s lap progress.
-    // That is, a 200 m lap in race terms corresponds to a 400 m lap physically.
+    // On a 200m lap track, a full lap is 200 m.
+    // We simulate this on our physical 400m drawing by doubling the lap progress.
     function getCCWTrackPosition200(progress) {
-      // progress is in [0, raceDistance] (for the 200m race simulation)
-      // Compute lap progress modulo 200, then scale by 2:
+      // progress is overall race progress (in meters) for the runner.
+      // For a 200m lap, map the lap progress (modulo 200) multiplied by 2.
       let lapProgress = progress % 200;
       let physicalProgress = lapProgress * 2;
       return getCCWTrackPosition(physicalProgress);
@@ -228,7 +242,7 @@
       pathElem.setAttribute('stroke-width', '2');
       svg.appendChild(pathElem);
       
-      // Draw the start/finish line at p0.
+      // Draw start/finish line at p0.
       const finishLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');
       finishLine.setAttribute('x1', p0.x.toFixed(2));
       finishLine.setAttribute('y1', (p0.y - 10).toFixed(2));
@@ -252,7 +266,6 @@
         text.setAttribute('x', (pos.x + 5).toFixed(2));
         text.setAttribute('y', (pos.y - 5).toFixed(2));
         text.setAttribute('font-size', '10');
-        // (Optional: swap labels for clarity as in some track drawings.)
         let label = d;
         if (d === 100) label = 300;
         else if (d === 300) label = 100;
@@ -262,8 +275,7 @@
     }
     
     // Draw the 200m track outline.
-    // We use the same physical outline as for 400m,
-    // but the markers are scaled by 0.5 to show lap distances of 0, 50, 100, and 150 m.
+    // Same physical outline is used but markers are scaled by 0.5.
     function drawTrack200() {
       const svg = document.getElementById('trackSVG200');
       svg.innerHTML = '';
@@ -297,7 +309,7 @@
       finishLine.setAttribute('stroke-width', '2');
       svg.appendChild(finishLine);
       
-      // Markers: physical distances 0, 100, 200, 300 m become 0, 50, 100, and 150 m on the 200m track.
+      // Markers: physical distances 0, 100, 200, 300 m become 0, 50, 100, and 150 m.
       [0, 100, 200, 300].forEach(d => {
         const pos = toPixel(getTrackPosition(d));
         const marker = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
@@ -325,7 +337,6 @@
     }
     
     /********* SPLITS TABLE UPDATE *********/
-    // For every 100 m increment (up to the race distance), display the proportional time.
     function updateSplitsTable(raceDistance, runner1Time, runner2Time) {
       const tableBody = document.getElementById('splitTableBody');
       tableBody.innerHTML = '';
@@ -345,7 +356,6 @@
     }
     
     /********* RACE ANIMATION *********/
-    // This function runs the simulation on both tracks concurrently.
     function startRace() {
       const raceDistance = parseFloat(document.getElementById('raceDistance').value);
       const runner1Time = parseFloat(document.getElementById('runner1Time').value);
@@ -355,7 +365,7 @@
       drawTrack400();
       drawTrack200();
       
-      // Get runner elements.
+      // Runner elements.
       const r1_400 = document.getElementById('runner1_400');
       const r2_400 = document.getElementById('runner2_400');
       const r1_200 = document.getElementById('runner1_200');
@@ -368,7 +378,7 @@
         const elapsed = (timestamp - startTime) / 1000; // seconds
         timerDisplay.textContent = `Time: ${elapsed.toFixed(2)}s`;
         
-        // Calculate each runner’s race progress (in meters)
+        // Overall race progress (in meters) for each runner.
         const progress1 = Math.min((elapsed / runner1Time) * raceDistance, raceDistance);
         const progress2 = Math.min((elapsed / runner2Time) * raceDistance, raceDistance);
         
@@ -387,6 +397,19 @@
         r1_200.style.top = (pos1_200.y - 8) + 'px';
         r2_200.style.left = (pos2_200.x - 8) + 'px';
         r2_200.style.top = (pos2_200.y - 8) + 'px';
+        
+        // --- Lap counters ---
+        // For Track A, lap length = 400 m.
+        const lapCount1_400 = Math.floor(progress1 / 400) + 1;
+        const lapCount2_400 = Math.floor(progress2 / 400) + 1;
+        document.getElementById('lapCounter400').innerText =
+          `Red: Lap ${lapCount1_400}, Blue: Lap ${lapCount2_400}`;
+        
+        // For Track B, lap length = 200 m.
+        const lapCount1_200 = Math.floor(progress1 / 200) + 1;
+        const lapCount2_200 = Math.floor(progress2 / 200) + 1;
+        document.getElementById('lapCounter200').innerText =
+          `Green: Lap ${lapCount1_200}, Orange: Lap ${lapCount2_200}`;
         
         // Continue the animation until both runners finish the race.
         if (progress1 < raceDistance || progress2 < raceDistance) {
