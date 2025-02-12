@@ -466,6 +466,7 @@
         distanceDisplay.innerText = `Runner 1: ${progress1.toFixed(2)} m, Runner 2: ${progress2.toFixed(2)} m | Gap: ${gap} m`;
 
         if (progress1 < raceDistance && progress2 < raceDistance) {
+          winAlert.innerText = "Race in progress...";
           requestAnimationFrame(update);
         } else if (progress1 < raceDistance || progress2 < raceDistance) {
           if (winnerToggle == 0) {
