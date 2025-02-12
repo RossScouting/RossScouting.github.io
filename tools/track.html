@@ -122,6 +122,7 @@
     <div id="splitTableContainer">
       <!-- New distance display -->
       <div id="distanceDisplay">Runner distances and gap will appear here.</div>
+      <div id="winAlert"></div>
       <table id="splitTable">
         <thead>
           <tr>
@@ -136,7 +137,6 @@
     
     <!-- Tracks wrapper (right side) -->
     <div class="track-wrapper">
-      <div id="winAlert"></div>
       <!-- Track A: 400m lap -->
       <div class="track-container" id="trackContainer400">
         <svg id="trackSVG400" width="600" height="300"></svg>
@@ -413,6 +413,7 @@
       const r2_200 = document.getElementById('runner2_200');
       const timerDisplay = document.getElementById('raceTimer');
       const distanceDisplay = document.getElementById('distanceDisplay');
+      const winAlert = document.getElementById('winAlert');
       
       let startTime = null;
       function update(timestamp) {
@@ -468,7 +469,7 @@
           requestAnimationFrame(update);
         } else if (progress1 < raceDistance || progress2 < raceDistance) {
           if (winnerToggle == 0) {
-            alert("Race won by " + gap + " meters");
+            distanceDisplay.innerText = "The race was won by " + gap + " meters.";
             winnerToggle = 1;
           }
           requestAnimationFrame(update);
