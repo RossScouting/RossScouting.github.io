@@ -104,7 +104,7 @@
     </label>
     <button onclick="startRace()">Start Race</button>
   </div>
-  <div id="raceTimer">Time: 0.00s</div>
+  <div id="raceTimer">Time: 00:00.00</div>
   <!-- New distance display -->
   <div id="distanceDisplay">Runner distances and gap will appear here.</div>
   
@@ -115,8 +115,8 @@
         <thead>
           <tr>
             <th>Distance (m)</th>
-            <th>Runner 1 (s)</th>
-            <th>Runner 2 (s)</th>
+            <th>Runner 1 (mm:ss.xx)</th>
+            <th>Runner 2 (mm:ss.xx)</th>
           </tr>
         </thead>
         <tbody id="splitTableBody"></tbody>
@@ -154,6 +154,19 @@
         return minutes * 60 + seconds;
       }
       return parseFloat(str);
+    }
+    
+    // Helper function: format seconds into "mm:ss.xx" (with two decimals for seconds)
+    function formatTime(totalSeconds) {
+      const minutes = Math.floor(totalSeconds / 60);
+      const seconds = totalSeconds - minutes * 60;
+      // Always display two digits for minutes and seconds.
+      const minutesStr = minutes < 10 ? "0" + minutes : minutes;
+      let secondsStr = seconds.toFixed(2);
+      if (seconds < 10) {
+        secondsStr = "0" + secondsStr;
+      }
+      return minutesStr + ":" + secondsStr;
     }
     
     /********* COMMON PHYSICAL TRACK GEOMETRY *********/
@@ -330,10 +343,7 @@
       svg.appendChild(finishLine);
       
       // Custom marker labels for the 200m track.
-      // At physical 0: "0m"
-      // At physical 100: "150m"
-      // At physical 200: "100m"
-      // At physical 300: "50m"
+      // At physical 0: "0m", 100: "150m", 200: "100m", 300: "50m"
       const labels = {
         0: "0m",
         100: "150m",
@@ -369,9 +379,9 @@
         const cellDistance = document.createElement('td');
         cellDistance.textContent = d;
         const cellRunner1 = document.createElement('td');
-        cellRunner1.textContent = (runner1Time * (d / raceDistance)).toFixed(2);
+        cellRunner1.textContent = formatTime(runner1Time * (d / raceDistance));
         const cellRunner2 = document.createElement('td');
-        cellRunner2.textContent = (runner2Time * (d / raceDistance)).toFixed(2);
+        cellRunner2.textContent = formatTime(runner2Time * (d / raceDistance));
         row.appendChild(cellDistance);
         row.appendChild(cellRunner1);
         row.appendChild(cellRunner2);
@@ -402,7 +412,7 @@
       function update(timestamp) {
         if (!startTime) startTime = timestamp;
         const elapsed = (timestamp - startTime) / 1000; // seconds
-        timerDisplay.textContent = `Time: ${elapsed.toFixed(2)}s`;
+        timerDisplay.textContent = `Time: ${formatTime(elapsed)}`;
         
         // Overall race progress (in meters) for each runner.
         const progress1 = Math.min((elapsed / runner1Time) * raceDistance, raceDistance);
@@ -436,7 +446,6 @@
           `Green: Lap ${lapCount1_200}, Orange: Lap ${lapCount2_200}`;
         
         // --- Distance display ---
-        // Display the overall distance run by each runner and the gap between them.
         const gap = Math.abs(progress1 - progress2).toFixed(2);
         distanceDisplay.innerText = `Runner 1: ${progress1.toFixed(2)} m, Runner 2: ${progress2.toFixed(2)} m | Gap: ${gap} m`;
         
