@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Popup with Buttons</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+        .popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 300px;
+            background: white;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+        }
+        .buttons-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+            margin-top: 10px;
+        }
+        .buttons-container button {
+            margin: 5px;
+            padding: 10px;
+            cursor: pointer;
+        }
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+        }
+    </style>
+</head>
+<body>
+    <button onclick="showPopup()">Open Popup</button>
+    
+    <div class="overlay" id="overlay"></div>
+    
+    <div class="popup" id="popup">
+        <h3>Enter Text</h3>
+        <input type="text" id="textInput" placeholder="Type something...">
+        <div class="buttons-container">
+            <button onclick="buttonClicked(1)">Button 1</button>
+            <button onclick="buttonClicked(2)">Button 2</button>
+            <button onclick="buttonClicked(3)">Button 3</button>
+            <button onclick="buttonClicked(4)">Button 4</button>
+            <button onclick="buttonClicked(5)">Button 5</button>
+            <button onclick="buttonClicked(6)">Button 6</button>
+        </div>
+        <br>
+        <button onclick="closePopup()">Close</button>
+    </div>
+    
+    <script>
+        function showPopup() {
+            document.getElementById('popup').style.display = 'block';
+            document.getElementById('overlay').style.display = 'block';
+        }
+
+        function closePopup() {
+            document.getElementById('popup').style.display = 'none';
+            document.getElementById('overlay').style.display = 'none';
+        }
+
+        function buttonClicked(num) {
+            alert("Button " + num + " clicked!");
+        }
+    </script>
+</body>
+</html>
