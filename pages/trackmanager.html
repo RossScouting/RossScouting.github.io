@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Track Team Manager</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f4f4;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background: #333;
+      color: #fff;
+      padding: 1em;
+      text-align: center;
+    }
+    .container {
+      max-width: 800px;
+      margin: 20px auto;
+      padding: 1em;
+    }
+    .section {
+      background: #fff;
+      margin: 10px 0;
+      padding: 15px;
+      border-radius: 5px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    h2 {
+      border-bottom: 1px solid #ddd;
+      padding-bottom: 5px;
+    }
+    .event {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin: 10px 0;
+    }
+    .event span {
+      flex: 1;
+    }
+    button {
+      padding: 5px 10px;
+      border: none;
+      background: #28a745;
+      color: #fff;
+      border-radius: 3px;
+      cursor: pointer;
+      margin-left: 10px;
+    }
+    button:disabled {
+      background: #aaa;
+      cursor: not-allowed;
+    }
+    pre {
+      background: #eee;
+      padding: 10px;
+      white-space: pre-wrap;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Track Team Manager</h1>
+    <p>Manage your team, train your athletes, and compete in track events!</p>
+  </header>
+  <div class="container">
+    <!-- Team Funds and Passive Income -->
+    <div class="section" id="teamStats">
+      <h2>Team Stats</h2>
+      <p id="funds">Funds: $100</p>
+      <p>Passive Income: +$1 per second</p>
+    </div>
+    
+    <!-- Training Section -->
+    <div class="section" id="training">
+      <h2>Training</h2>
+      <div id="trainingList">
+        <!-- Training events will be dynamically inserted here -->
+      </div>
+    </div>
+    
+    <!-- Competition Section -->
+    <div class="section" id="competition">
+      <h2>Competition</h2>
+      <div id="competitionList">
+        <!-- Competition preview will be dynamically inserted here -->
+      </div>
+      <button id="competeButton">Run Competition</button>
+      <pre id="competitionResult">Competition results will appear here.</pre>
+    </div>
+  </div>
+  
+  <script>
+    // Starting funds and passive income (idle gain)
+    let funds = 100;
+    const passiveIncome = 1; // funds earned per second
+
+    // Define our track events (from 100m doubling to 3200m)
+    const events = [
+      { name: '100m',  distance: 100,  trainingLevel: 0, baseTime: 12.0, improvement: 0.2 },
+      { name: '200m',  distance: 200,  trainingLevel: 0, baseTime: 25.0, improvement: 0.5 },
+      { name: '400m',  distance: 400,  trainingLevel: 0, baseTime: 55.0, improvement: 1.0 },
+      { name: '800m',  distance: 800,  trainingLevel: 0, baseTime: 120.0, improvement: 2.0 },
+      { name: '1600m', distance: 1600, trainingLevel: 0, baseTime: 250.0, improvement: 4.0 },
+      { name: '3200m', distance: 3200, trainingLevel: 0, baseTime: 500.0, improvement: 8.0 }
+    ];
+
+    // Training cost increases with level; you can adjust the multiplier as needed.
+    function trainingCost(event) {
+      return 50 * (event.trainingLevel + 1);
+    }
+
+    // Update the training list UI
+    function updateTrainingList() {
+      const trainingList = document.getElementById('trainingList');
+      trainingList.innerHTML = '';
+      events.forEach((event, index) => {
+        const div = document.createElement('div');
+        div.className = 'event';
+        div.innerHTML = `
+          <span><strong>${event.name}</strong> (Level: ${event.trainingLevel})</span>
+          <span>Cost: $${trainingCost(event)}</span>
+          <button onclick="trainEvent(${index})">Train</button>
+        `;
+        trainingList.appendChild(div);
+      });
+    }
+
+    // Handle training: subtract funds and increase the event's training level.
+    function trainEvent(index) {
+      const event = events[index];
+      const cost = trainingCost(event);
+      if (funds >= cost) {
+        funds -= cost;
+        event.trainingLevel++;
+        updateUI();
+      } else {
+        alert("Not enough funds!");
+      }
+    }
+
+    // Update the competition preview list UI.
+    function updateCompetitionList() {
+      const competitionList = document.getElementById('competitionList');
+      competitionList.innerHTML = '';
+      events.forEach(event => {
+        // Calculate a "predicted time" based on training.
+        // The more you train, the lower (better) the time.
+        // We set a floor so that performance never goes unrealistically low.
+        const predictedTime = Math.max(event.baseTime - event.trainingLevel * event.improvement, event.baseTime * 0.5);
+        const div = document.createElement('div');
+        div.className = 'event';
+        div.innerHTML = `<span>${event.name}: Predicted Time: ${predictedTime.toFixed(2)}s</span>`;
+        competitionList.appendChild(div);
+      });
+    }
+
+    // Simulate the competition.
+    // For each event, we add a random variation (+/- 10%).
+    // If performance is at or better than the predicted time, you win that event.
+    // Rewards are based on event distance.
+    function runCompetition() {
+      let totalReward = 0;
+      let resultText = '';
+      events.forEach(event => {
+        const predictedTime = Math.max(event.baseTime - event.trainingLevel * event.improvement, event.baseTime * 0.5);
+        // Simulate actual performance with a random variation of up to ±10%
+        const variation = 1 + (Math.random() - 0.5) / 5;
+        const performance = predictedTime * variation;
+        let reward = 0;
+        if (performance <= predictedTime) {
+          // Winning gives a higher reward.
+          reward = Math.round(100 * (event.distance / 100));
+          resultText += `${event.name}: WIN! Time: ${performance.toFixed(2)}s — Reward: $${reward}\n`;
+        } else {
+          // A loss gives a smaller reward.
+          reward = Math.round(50 * (event.distance / 100));
+          resultText += `${event.name}: Loss. Time: ${performance.toFixed(2)}s — Consolation: $${reward}\n`;
+        }
+        totalReward += reward;
+      });
+      funds += totalReward;
+      document.getElementById('competitionResult').innerText = resultText;
+      updateUI();
+    }
+
+    // Update all UI elements
+    function updateUI() {
+      document.getElementById('funds').innerText = `Funds: $${funds}`;
+      updateTrainingList();
+      updateCompetitionList();
+    }
+
+    // Increase funds passively every second
+    setInterval(() => {
+      funds += passiveIncome;
+      updateUI();
+    }, 1000);
+
+    // Attach competition button click handler
+    document.getElementById('competeButton').addEventListener('click', runCompetition);
+
+    // Initial UI update
+    updateUI();
+  </script>
+</body>
+</html>
