@@ -95,18 +95,27 @@
   </div>
   
   <script>
+    // Convert seconds to mm:ss.xx format
+    function formatTime(totalSeconds) {
+      const minutes = Math.floor(totalSeconds / 60);
+      const seconds = totalSeconds % 60;
+      const secondsStr = seconds < 10 ? '0' + seconds.toFixed(2) : seconds.toFixed(2);
+      return (minutes < 10 ? '0' + minutes : minutes) + ':' + secondsStr;
+    }
+    
     // Starting funds and passive income (idle gain)
     let funds = 100;
     const passiveIncome = 1; // funds earned per second
 
-    // Define our track events (from 100m doubling to 3200m)
+    // Define our track events with more realistic times.
+    // Each event now has a minimum possible time.
     const events = [
-      { name: '100m',  distance: 100,  trainingLevel: 0, baseTime: 12.0, improvement: 0.2 },
-      { name: '200m',  distance: 200,  trainingLevel: 0, baseTime: 25.0, improvement: 0.5 },
-      { name: '400m',  distance: 400,  trainingLevel: 0, baseTime: 55.0, improvement: 1.0 },
-      { name: '800m',  distance: 800,  trainingLevel: 0, baseTime: 120.0, improvement: 2.0 },
-      { name: '1600m', distance: 1600, trainingLevel: 0, baseTime: 250.0, improvement: 4.0 },
-      { name: '3200m', distance: 3200, trainingLevel: 0, baseTime: 500.0, improvement: 8.0 }
+      { name: '100m',  distance: 100,  trainingLevel: 0, baseTime: 12.0, improvement: 0.3, minTime: 10.0 },
+      { name: '200m',  distance: 200,  trainingLevel: 0, baseTime: 25.0, improvement: 0.5, minTime: 20.0 },
+      { name: '400m',  distance: 400,  trainingLevel: 0, baseTime: 60.0, improvement: 1.0, minTime: 45.0 },
+      { name: '800m',  distance: 800,  trainingLevel: 0, baseTime: 130.0, improvement: 2.0, minTime: 100.0 },
+      { name: '1600m', distance: 1600, trainingLevel: 0, baseTime: 280.0, improvement: 4.0, minTime: 200.0 },
+      { name: '3200m', distance: 3200, trainingLevel: 0, baseTime: 600.0, improvement: 8.0, minTime: 400.0 }
     ];
 
     // Training cost increases with level; you can adjust the multiplier as needed.
@@ -149,12 +158,10 @@
       competitionList.innerHTML = '';
       events.forEach(event => {
         // Calculate a "predicted time" based on training.
-        // The more you train, the lower (better) the time.
-        // We set a floor so that performance never goes unrealistically low.
-        const predictedTime = Math.max(event.baseTime - event.trainingLevel * event.improvement, event.baseTime * 0.5);
+        const predictedTime = Math.max(event.baseTime - event.trainingLevel * event.improvement, event.minTime);
         const div = document.createElement('div');
         div.className = 'event';
-        div.innerHTML = `<span>${event.name}: Predicted Time: ${predictedTime.toFixed(2)}s</span>`;
+        div.innerHTML = `<span>${event.name}: Predicted Time: ${formatTime(predictedTime)}</span>`;
         competitionList.appendChild(div);
       });
     }
@@ -167,19 +174,19 @@
       let totalReward = 0;
       let resultText = '';
       events.forEach(event => {
-        const predictedTime = Math.max(event.baseTime - event.trainingLevel * event.improvement, event.baseTime * 0.5);
+        const predictedTime = Math.max(event.baseTime - event.trainingLevel * event.improvement, event.minTime);
         // Simulate actual performance with a random variation of up to ±10%
-        const variation = 1 + (Math.random() - 0.5) / 5;
+        const variation = 1 + (Math.random() - 0.5) / 5; // variation between 0.9 and 1.1
         const performance = predictedTime * variation;
         let reward = 0;
         if (performance <= predictedTime) {
           // Winning gives a higher reward.
           reward = Math.round(100 * (event.distance / 100));
-          resultText += `${event.name}: WIN! Time: ${performance.toFixed(2)}s — Reward: $${reward}\n`;
+          resultText += `${event.name}: WIN! Time: ${formatTime(performance)} — Reward: $${reward}\n`;
         } else {
           // A loss gives a smaller reward.
           reward = Math.round(50 * (event.distance / 100));
-          resultText += `${event.name}: Loss. Time: ${performance.toFixed(2)}s — Consolation: $${reward}\n`;
+          resultText += `${event.name}: Loss. Time: ${formatTime(performance)} — Consolation: $${reward}\n`;
         }
         totalReward += reward;
       });
