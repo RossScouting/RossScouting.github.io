@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Track Team Manager</title>
+  <title>Track Team Manager - Idle Game</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -95,7 +95,7 @@
   </div>
   
   <script>
-    // Convert seconds to mm:ss.xx format
+    // Converts seconds into a mm:ss.xx format.
     function formatTime(totalSeconds) {
       const minutes = Math.floor(totalSeconds / 60);
       const seconds = totalSeconds % 60;
@@ -103,27 +103,29 @@
       return (minutes < 10 ? '0' + minutes : minutes) + ':' + secondsStr;
     }
     
-    // Starting funds and passive income (idle gain)
+    // Starting funds and passive income.
     let funds = 100;
     const passiveIncome = 1; // funds earned per second
-
-    // Define our track events with more realistic times.
-    // Each event now has a minimum possible time.
+    
+    // Define our track events.
+    // Improvement: 0.1 seconds per 100m per level.
+    // The predicted time is calculated as: baseTime - (trainingLevel × improvement)
+    // but will never drop below minTime.
     const events = [
-      { name: '100m',  distance: 100,  trainingLevel: 0, baseTime: 12.0, improvement: 0.3, minTime: 10.0 },
-      { name: '200m',  distance: 200,  trainingLevel: 0, baseTime: 25.0, improvement: 0.5, minTime: 20.0 },
-      { name: '400m',  distance: 400,  trainingLevel: 0, baseTime: 60.0, improvement: 1.0, minTime: 45.0 },
-      { name: '800m',  distance: 800,  trainingLevel: 0, baseTime: 130.0, improvement: 2.0, minTime: 100.0 },
-      { name: '1600m', distance: 1600, trainingLevel: 0, baseTime: 280.0, improvement: 4.0, minTime: 200.0 },
-      { name: '3200m', distance: 3200, trainingLevel: 0, baseTime: 600.0, improvement: 8.0, minTime: 400.0 }
+      { name: '100m',  distance: 100,  trainingLevel: 0, baseTime: 12.0, improvement: 0.1, minTime: 10.0 },
+      { name: '200m',  distance: 200,  trainingLevel: 0, baseTime: 24.0, improvement: 0.2, minTime: 19.5 },
+      { name: '400m',  distance: 400,  trainingLevel: 0, baseTime: 53.0, improvement: 0.4, minTime: 47.0 },
+      { name: '800m',  distance: 800,  trainingLevel: 0, baseTime: 115.0, improvement: 0.8, minTime: 105.0 },
+      { name: '1600m', distance: 1600, trainingLevel: 0, baseTime: 240.0, improvement: 1.6, minTime: 220.0 },
+      { name: '3200m', distance: 3200, trainingLevel: 0, baseTime: 500.0, improvement: 3.2, minTime: 450.0 }
     ];
-
-    // Training cost increases with level; you can adjust the multiplier as needed.
+    
+    // Training cost increases with level.
     function trainingCost(event) {
       return 50 * (event.trainingLevel + 1);
     }
-
-    // Update the training list UI
+    
+    // Update the training list UI.
     function updateTrainingList() {
       const trainingList = document.getElementById('trainingList');
       trainingList.innerHTML = '';
@@ -138,7 +140,7 @@
         trainingList.appendChild(div);
       });
     }
-
+    
     // Handle training: subtract funds and increase the event's training level.
     function trainEvent(index) {
       const event = events[index];
@@ -151,13 +153,13 @@
         alert("Not enough funds!");
       }
     }
-
+    
     // Update the competition preview list UI.
     function updateCompetitionList() {
       const competitionList = document.getElementById('competitionList');
       competitionList.innerHTML = '';
       events.forEach(event => {
-        // Calculate a "predicted time" based on training.
+        // Calculate the predicted time based on training.
         const predictedTime = Math.max(event.baseTime - event.trainingLevel * event.improvement, event.minTime);
         const div = document.createElement('div');
         div.className = 'event';
@@ -165,26 +167,24 @@
         competitionList.appendChild(div);
       });
     }
-
+    
     // Simulate the competition.
-    // For each event, we add a random variation (+/- 10%).
-    // If performance is at or better than the predicted time, you win that event.
-    // Rewards are based on event distance.
+    // A random variation of ±10% is applied to each event.
     function runCompetition() {
       let totalReward = 0;
       let resultText = '';
       events.forEach(event => {
         const predictedTime = Math.max(event.baseTime - event.trainingLevel * event.improvement, event.minTime);
-        // Simulate actual performance with a random variation of up to ±10%
-        const variation = 1 + (Math.random() - 0.5) / 5; // variation between 0.9 and 1.1
+        // Variation between 0.9 and 1.1
+        const variation = 1 + (Math.random() - 0.5) / 5;
         const performance = predictedTime * variation;
         let reward = 0;
         if (performance <= predictedTime) {
-          // Winning gives a higher reward.
+          // A win rewards more funds.
           reward = Math.round(100 * (event.distance / 100));
           resultText += `${event.name}: WIN! Time: ${formatTime(performance)} — Reward: $${reward}\n`;
         } else {
-          // A loss gives a smaller reward.
+          // A loss still gives a consolation prize.
           reward = Math.round(50 * (event.distance / 100));
           resultText += `${event.name}: Loss. Time: ${formatTime(performance)} — Consolation: $${reward}\n`;
         }
@@ -194,24 +194,24 @@
       document.getElementById('competitionResult').innerText = resultText;
       updateUI();
     }
-
-    // Update all UI elements
+    
+    // Update all UI elements.
     function updateUI() {
       document.getElementById('funds').innerText = `Funds: $${funds}`;
       updateTrainingList();
       updateCompetitionList();
     }
-
-    // Increase funds passively every second
+    
+    // Increase funds passively every second.
     setInterval(() => {
       funds += passiveIncome;
       updateUI();
     }, 1000);
-
-    // Attach competition button click handler
+    
+    // Attach competition button click handler.
     document.getElementById('competeButton').addEventListener('click', runCompetition);
-
-    // Initial UI update
+    
+    // Initial UI update.
     updateUI();
   </script>
 </body>
