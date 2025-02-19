@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Track and Field Simulator</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    /* Controls and splits table */
+    #controls {
+      margin: 10px;
+    }
+    label {
+      margin: 5px;
+    }
+    #splitTableContainer {
+      margin-right: 20px;
+    }
+    table {
+      border-collapse: collapse;
+    }
+    th, td {
+      border: 1px solid #333;
+      padding: 4px;
+      text-align: center;
+    }
+    /* Overall race display layout */
+    #raceDisplay {
+      display: flex;
+      align-items: flex-start;
+      gap: 20px;
+    }
+    .track-wrapper {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    .track-container {
+      position: relative;
+      width: 600px;
+      height: 300px;
+      border: 1px solid #ccc;
+    }
+    svg {
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+    .runner {
+      position: absolute;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+    }
+    /* Colors for Track A (400m) runners */
+    #runner1_400 { background: red; }
+    #runner2_400 { background: blue; }
+    /* Colors for Track B (200m) runners */
+    #runner1_200 { background: green; }
+    #runner2_200 { background: orange; }
+    #raceTimer {
+      font-size: 20px;
+      margin: 10px;
+    }
+    /* New distance display styling */
+    #distanceDisplay {
+      font-size: 18px;
+      margin: 5px;
+      background: rgba(220,220,220,0.8);
+      padding: 5px;
+      border-radius: 5px;
+    }
+    /* Lap info container styling */
+    .lap-info {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+    }
+    .lap-label {
+      font-size: 18px;
+      margin-bottom: 4px;
+    }
+    .lap-counter {
+      font-size: 20px;
+      margin: 4px 0;
+      background: rgba(255, 255, 255, 0.7);
+      padding: 5px;
+      border-radius: 5px;
+    }
+    .laps-to-go {
+      font-size: 16px;
+      margin-top: 4px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Track and Field Simulator</h1>
+  <div id="controls">
+    <!-- Overall race inputs: race distance and finishing times -->
+    <label>Race Distance (m):
+      <input type="number" id="raceDistance" value="3200" />
+    </label>
+    <label>Runner 1 Time (mm:ss):
+      <input type="text" id="runner1Time" value="9:59" placeholder="mm:ss" />
+    </label>
+    <label>Runner 2 Time (mm:ss):
+      <input type="text" id="runner2Time" value="10:25" placeholder="mm:ss" />
+    </label>
+    <button onclick="startRace()">Start Race</button>
+  </div>
+  <div id="raceTimer">Time: 00:00.00</div>
+  
+  <div id="raceDisplay">
+    <!-- Splits Table (left side) -->
+    <div id="splitTableContainer">
+      <!-- New distance display -->
+      <div id="distanceDisplay">Runner distances and gap will appear here.</div>
+      <div id="winAlert" style="text-align: center;"></div>
+      <table id="splitTable">
+        <thead>
+          <tr>
+            <th>Distance (m)</th>
+            <th>Runner 1 (mm:ss.xx)</th>
+            <th>Runner 2 (mm:ss.xx)</th>
+          </tr>
+        </thead>
+        <tbody id="splitTableBody"></tbody>
+      </table>
+    </div>
+    
+    <!-- Tracks wrapper (right side) -->
+    <div class="track-wrapper">
+      <!-- Track A: 400m lap -->
+      <div class="track-container" id="trackContainer400">
+        <svg id="trackSVG400" width="600" height="300"></svg>
+        <div class="runner" id="runner1_400"></div>
+        <div class="runner" id="runner2_400"></div>
+        <!-- Lap info container overlaid in center -->
+        <div class="lap-info" id="lapInfo400">
+          <div class="lap-label" id="lapLabel400">400 Meter Track</div>
+          <div class="lap-counter" id="lapCounter400">Red: Lap 1, Blue: Lap 1</div>
+          <div class="laps-to-go" id="lapsToGo400">Red: Laps to Go 0, Blue: Laps to Go 0</div>
+        </div>
+      </div>
+      <!-- Track B: 200m lap -->
+      <div class="track-container" id="trackContainer200">
+        <svg id="trackSVG200" width="600" height="300"></svg>
+        <div class="runner" id="runner1_200"></div>
+        <div class="runner" id="runner2_200"></div>
+        <!-- Lap info container overlaid in center -->
+        <div class="lap-info" id="lapInfo200">
+          <div class="lap-label" id="lapLabel200">200 Meter Track</div>
+          <div class="lap-counter" id="lapCounter200">Green: Lap 1, Orange: Lap 1</div>
+          <div class="laps-to-go" id="lapsToGo200">Green: Laps Left 0, Orange: Laps Left 0</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <script>
+    //Binary Toggle for winning alert.
+    var winnerToggle  = 0;
+
+    // Helper function: parse time strings in mm:ss (or ss) format.
+    function parseTime(str) {
+      if (str.indexOf(':') !== -1) {
+        let parts = str.split(':');
+        let minutes = parseFloat(parts[0]) || 0;
+        let seconds = parseFloat(parts[1]) || 0;
+        return minutes * 60 + seconds;
+      }
+      return parseFloat(str);
+    }
+    
+    // Helper function: format seconds into "mm:ss.xx" (with two decimals for seconds)
+    function formatTime(totalSeconds) {
+      const minutes = Math.floor(totalSeconds / 60);
+      const seconds = totalSeconds - minutes * 60;
+      const minutesStr = minutes < 10 ? "0" + minutes : minutes;
+      let secondsStr = seconds.toFixed(2);
+      if (seconds < 10) {
+        secondsStr = "0" + secondsStr;
+      }
+      return minutesStr + ":" + secondsStr;
+    }
+    
+    /********* COMMON PHYSICAL TRACK GEOMETRY *********/
+    const S = 3.6; // pixels per meter
+    const straightLength = 100; // meters for each straight on a 400m track
+    const R = 100 / Math.PI;    // radius for curves (~31.83 m)
+    const trackWidth_m = 100 + 2 * R;
+    const trackHeight_m = 2 * R;
+    const containerWidth = 600;
+    const containerHeight = 300;
+    const offsetX = (containerWidth - trackWidth_m * S) / 2;
+    const offsetY = (containerHeight - trackHeight_m * S) / 2;
+    
+    function toPixel(pos) {
+      return {
+        x: pos.x * S + offsetX,
+        y: pos.y * S + offsetY
+      };
+    }
+    
+    /********* 400m TRACK GEOMETRY & POSITIONING *********/
+    function getTrackPosition(d) {
+      let x, y;
+      if (d <= 100) {
+        x = R + d;
+        y = 0;
+      } else if (d <= 200) {
+        const t = (d - 100) / 100;
+        const angle = -Math.PI / 2 + t * Math.PI;
+        x = (R + 100) + R * Math.cos(angle);
+        y = R + R * Math.sin(angle);
+      } else if (d <= 300) {
+        x = (R + 100) - (d - 200);
+        y = 2 * R;
+      } else {
+        const t = (d - 300) / 100;
+        const angle = Math.PI / 2 - t * Math.PI;
+        x = R + R * Math.cos(angle);
+        y = R + R * Math.sin(angle);
+      }
+      return { x, y };
+    }
+    
+    function getCCWTrackPosition(d) {
+      d = d % 400;
+      let x, y;
+      if (d <= 100) {
+        const u = d / 100;
+        const angle = -Math.PI / 2 + u * Math.PI;
+        x = R - R * Math.cos(angle);
+        y = R + R * Math.sin(angle);
+      } else if (d <= 200) {
+        const u = (d - 100) / 100;
+        x = R + u * 100;
+        y = 2 * R;
+      } else if (d <= 300) {
+        const u = (d - 200) / 100;
+        const angle = Math.PI / 2 - u * Math.PI;
+        x = (R + 100) + R * Math.cos(angle);
+        y = R + R * Math.sin(angle);
+      } else {
+        const u = (d - 300) / 100;
+        x = (R + 100) - u * 100;
+        y = 0;
+      }
+      return { x, y };
+    }
+    
+    /********* 200m TRACK POSITIONING *********/
+    function getCCWTrackPosition200(progress) {
+      let lapProgress = progress % 200;
+      let physicalProgress = lapProgress * 2;
+      return getCCWTrackPosition(physicalProgress);
+    }
+    
+    /********* DRAWING THE TRACKS *********/
+    function drawTrack400() {
+      const svg = document.getElementById('trackSVG400');
+      svg.innerHTML = '';
+      
+      const p0 = toPixel(getTrackPosition(0));
+      const p100 = toPixel(getTrackPosition(100));
+      const p200 = toPixel(getTrackPosition(200));
+      const p300 = toPixel(getTrackPosition(300));
+      const radiusPx = R * S;
+      
+      let pathStr = `M ${p0.x.toFixed(2)} ${p0.y.toFixed(2)} `;
+      pathStr += `L ${p100.x.toFixed(2)} ${p100.y.toFixed(2)} `;
+      pathStr += `A ${radiusPx.toFixed(2)} ${radiusPx.toFixed(2)} 0 0,1 ${p200.x.toFixed(2)} ${p200.y.toFixed(2)} `;
+      pathStr += `L ${p300.x.toFixed(2)} ${p300.y.toFixed(2)} `;
+      pathStr += `A ${radiusPx.toFixed(2)} ${radiusPx.toFixed(2)} 0 0,1 ${p0.x.toFixed(2)} ${p0.y.toFixed(2)} Z`;
+      
+      const pathElem = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+      pathElem.setAttribute('d', pathStr);
+      pathElem.setAttribute('fill', 'none');
+      pathElem.setAttribute('stroke', 'black');
+      pathElem.setAttribute('stroke-width', '2');
+      svg.appendChild(pathElem);
+      
+      const finishLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+      finishLine.setAttribute('x1', p0.x.toFixed(2));
+      finishLine.setAttribute('y1', (p0.y - 10).toFixed(2));
+      finishLine.setAttribute('x2', p0.x.toFixed(2));
+      finishLine.setAttribute('y2', (p0.y + 10).toFixed(2));
+      finishLine.setAttribute('stroke', 'red');
+      finishLine.setAttribute('stroke-width', '2');
+      svg.appendChild(finishLine);
+      
+      [0, 100, 200, 300].forEach(d => {
+        const pos = toPixel(getTrackPosition(d));
+        const marker = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+        marker.setAttribute('cx', pos.x.toFixed(2));
+        marker.setAttribute('cy', pos.y.toFixed(2));
+        marker.setAttribute('r', '3');
+        marker.setAttribute('fill', 'blue');
+        svg.appendChild(marker);
+        
+        const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+        text.setAttribute('x', (pos.x + 5).toFixed(2));
+        text.setAttribute('y', (pos.y - 5).toFixed(2));
+        text.setAttribute('font-size', '10');
+        let label = d;
+        if (d === 100) label = 300;
+        else if (d === 300) label = 100;
+        text.textContent = label + 'm';
+        svg.appendChild(text);
+      });
+    }
+    
+    function drawTrack200() {
+      const svg = document.getElementById('trackSVG200');
+      svg.innerHTML = '';
+      
+      const p0 = toPixel(getTrackPosition(0));
+      const p100 = toPixel(getTrackPosition(100));
+      const p200 = toPixel(getTrackPosition(200));
+      const p300 = toPixel(getTrackPosition(300));
+      const radiusPx = R * S;
+      
+      let pathStr = `M ${p0.x.toFixed(2)} ${p0.y.toFixed(2)} `;
+      pathStr += `L ${p100.x.toFixed(2)} ${p100.y.toFixed(2)} `;
+      pathStr += `A ${radiusPx.toFixed(2)} ${radiusPx.toFixed(2)} 0 0,1 ${p200.x.toFixed(2)} ${p200.y.toFixed(2)} `;
+      pathStr += `L ${p300.x.toFixed(2)} ${p300.y.toFixed(2)} `;
+      pathStr += `A ${radiusPx.toFixed(2)} ${radiusPx.toFixed(2)} 0 0,1 ${p0.x.toFixed(2)} ${p0.y.toFixed(2)} Z`;
+      
+      const pathElem = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+      pathElem.setAttribute('d', pathStr);
+      pathElem.setAttribute('fill', 'none');
+      pathElem.setAttribute('stroke', 'black');
+      pathElem.setAttribute('stroke-width', '2');
+      svg.appendChild(pathElem);
+      
+      const finishLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+      finishLine.setAttribute('x1', p0.x.toFixed(2));
+      finishLine.setAttribute('y1', (p0.y - 10).toFixed(2));
+      finishLine.setAttribute('x2', p0.x.toFixed(2));
+      finishLine.setAttribute('y2', (p0.y + 10).toFixed(2));
+      finishLine.setAttribute('stroke', 'red');
+      finishLine.setAttribute('stroke-width', '2');
+      svg.appendChild(finishLine);
+      
+      const labels = {
+        0: "0m",
+        100: "150m",
+        200: "100m",
+        300: "50m"
+      };
+      
+      [0, 100, 200, 300].forEach(d => {
+        const pos = toPixel(getTrackPosition(d));
+        const marker = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+        marker.setAttribute('cx', pos.x.toFixed(2));
+        marker.setAttribute('cy', pos.y.toFixed(2));
+        marker.setAttribute('r', '3');
+        marker.setAttribute('fill', 'blue');
+        svg.appendChild(marker);
+        
+        const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+        text.setAttribute('x', (pos.x + 5).toFixed(2));
+        text.setAttribute('y', (pos.y - 5).toFixed(2));
+        text.setAttribute('font-size', '10');
+        text.textContent = labels[d];
+        svg.appendChild(text);
+      });
+    }
+    
+    /********* SPLITS TABLE UPDATE *********/
+    function updateSplitsTable(raceDistance, runner1Time, runner2Time) {
+      const tableBody = document.getElementById('splitTableBody');
+      tableBody.innerHTML = '';
+      for (let d = 0; d <= raceDistance; d += 100) {
+        const row = document.createElement('tr');
+        const cellDistance = document.createElement('td');
+        cellDistance.textContent = d;
+        const cellRunner1 = document.createElement('td');
+        cellRunner1.textContent = formatTime(runner1Time * (d / raceDistance));
+        const cellRunner2 = document.createElement('td');
+        cellRunner2.textContent = formatTime(runner2Time * (d / raceDistance));
+        row.appendChild(cellDistance);
+        row.appendChild(cellRunner1);
+        row.appendChild(cellRunner2);
+        tableBody.appendChild(row);
+      }
+
+      //Binary Toggle for winning alert.
+      winnerToggle  = 0;
+    }
+    
+    /********* RACE ANIMATION *********/
+    function startRace() {
+      const raceDistance = parseFloat(document.getElementById('raceDistance').value);
+      const runner1Time = parseTime(document.getElementById('runner1Time').value);
+      const runner2Time = parseTime(document.getElementById('runner2Time').value);
+      
+      updateSplitsTable(raceDistance, runner1Time, runner2Time);
+      drawTrack400();
+      drawTrack200();
+      
+      const r1_400 = document.getElementById('runner1_400');
+      const r2_400 = document.getElementById('runner2_400');
+      const r1_200 = document.getElementById('runner1_200');
+      const r2_200 = document.getElementById('runner2_200');
+      const timerDisplay = document.getElementById('raceTimer');
+      const distanceDisplay = document.getElementById('distanceDisplay');
+      const winAlert = document.getElementById('winAlert');
+      
+      let startTime = null;
+      function update(timestamp) {
+        if (!startTime) startTime = timestamp;
+        const elapsed = (timestamp - startTime) / 1000;
+        timerDisplay.textContent = `Time: ${formatTime(elapsed)}`;
+        
+        const progress1 = Math.min((elapsed / runner1Time) * raceDistance, raceDistance);
+        const progress2 = Math.min((elapsed / runner2Time) * raceDistance, raceDistance);
+        
+        // Update positions on 400m track
+        const pos1_400 = toPixel(getCCWTrackPosition(progress1));
+        const pos2_400 = toPixel(getCCWTrackPosition(progress2));
+        r1_400.style.left = (pos1_400.x - 8) + 'px';
+        r1_400.style.top = (pos1_400.y - 8) + 'px';
+        r2_400.style.left = (pos2_400.x - 8) + 'px';
+        r2_400.style.top = (pos2_400.y - 8) + 'px';
+        
+        // Update positions on 200m track
+        const pos1_200 = toPixel(getCCWTrackPosition200(progress1));
+        const pos2_200 = toPixel(getCCWTrackPosition200(progress2));
+        r1_200.style.left = (pos1_200.x - 8) + 'px';
+        r1_200.style.top = (pos1_200.y - 8) + 'px';
+        r2_200.style.left = (pos2_200.x - 8) + 'px';
+        r2_200.style.top = (pos2_200.y - 8) + 'px';
+        
+        // Lap counters for 400m track
+        const lapCount1_400 = progress1 > 0 ? Math.ceil(progress1 / 400) : 1;
+        const lapCount2_400 = progress2 > 0 ? Math.ceil(progress2 / 400) : 1;
+        document.getElementById('lapCounter400').innerText =
+          `Red: Lap ${lapCount1_400}, Blue: Lap ${lapCount2_400}`;
+        const totalLaps400 = Math.ceil(raceDistance / 400);
+        const lapsToGo1_400 = totalLaps400 - lapCount1_400;
+        const lapsToGo2_400 = totalLaps400 - lapCount2_400;
+        document.getElementById('lapsToGo400').innerText =
+          `Red: Laps to Go ${lapsToGo1_400}, Blue: Laps to Go ${lapsToGo2_400}`;
+        
+        // Lap counters for 200m track
+        const lapCount1_200 = progress1 > 0 ? Math.ceil(progress1 / 200) : 1;
+        const lapCount2_200 = progress2 > 0 ? Math.ceil(progress2 / 200) : 1;
+        document.getElementById('lapCounter200').innerText =
+          `Green: Lap ${lapCount1_200}, Orange: Lap ${lapCount2_200}`;
+        const totalLaps200 = Math.ceil(raceDistance / 200);
+        const lapsToGo1_200 = totalLaps200 - lapCount1_200;
+        const lapsToGo2_200 = totalLaps200 - lapCount2_200;
+        document.getElementById('lapsToGo200').innerText =
+          `Green: Laps Left ${lapsToGo1_200}, Orange: Laps Left ${lapsToGo2_200}`;
+        
+        const gap = Math.abs(progress1 - progress2).toFixed(2);
+        distanceDisplay.innerText = `Runner 1: ${progress1.toFixed(2)} m, Runner 2: ${progress2.toFixed(2)} m | Gap: ${gap} m`;
+
+        if (progress1 < raceDistance && progress2 < raceDistance) {
+          winAlert.innerText = "Race in progress...";
+          requestAnimationFrame(update);
+        } else if (progress1 < raceDistance || progress2 < raceDistance) {
+          if (winnerToggle == 0) {
+            winAlert.innerText = "The race was won by " + gap + " meters.";
+            winnerToggle = 1;
+          }
+          requestAnimationFrame(update);
+        }
+      }
+      requestAnimationFrame(update);
+    }
+  </script>
+</body>
+</html>
