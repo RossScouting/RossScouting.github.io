@@ -108,16 +108,58 @@
     const passiveIncome = 1; // funds earned per second
     
     // Define our track events.
-    // Improvement: 0.1 seconds per 100m per level.
-    // The predicted time is calculated as: baseTime - (trainingLevel × improvement)
-    // but will never drop below minTime.
+    // Improvement: 0.01 sec per 100m per level.
+    // The predicted time is: baseTime - (trainingLevel × improvement)
+    // and worldRecord is the target (and initial record) for that event.
     const events = [
-      { name: '100m',  distance: 100,  trainingLevel: 0, baseTime: 12.0, improvement: 0.1, minTime: 10.0 },
-      { name: '200m',  distance: 200,  trainingLevel: 0, baseTime: 24.0, improvement: 0.2, minTime: 19.5 },
-      { name: '400m',  distance: 400,  trainingLevel: 0, baseTime: 53.0, improvement: 0.4, minTime: 47.0 },
-      { name: '800m',  distance: 800,  trainingLevel: 0, baseTime: 115.0, improvement: 0.8, minTime: 105.0 },
-      { name: '1600m', distance: 1600, trainingLevel: 0, baseTime: 240.0, improvement: 1.6, minTime: 220.0 },
-      { name: '3200m', distance: 3200, trainingLevel: 0, baseTime: 500.0, improvement: 3.2, minTime: 450.0 }
+      { 
+        name: '100m',  
+        distance: 100,  
+        trainingLevel: 0, 
+        baseTime: 15.0, 
+        improvement: 0.01 * (100/100), // 0.01 sec per level 
+        worldRecord: 9.48 
+      },
+      { 
+        name: '200m',  
+        distance: 200,  
+        trainingLevel: 0, 
+        baseTime: 40.0, 
+        improvement: 0.01 * (200/100), // 0.02 sec per level 
+        worldRecord: 18.99 
+      },
+      { 
+        name: '400m',  
+        distance: 400,  
+        trainingLevel: 0, 
+        baseTime: 90.0, // 1:30.00 
+        improvement: 0.01 * (400/100), // 0.04 sec per level 
+        worldRecord: 42.63 
+      },
+      { 
+        name: '800m',  
+        distance: 800,  
+        trainingLevel: 0, 
+        baseTime: 190.0, // 3:10.00 
+        improvement: 0.01 * (800/100), // 0.08 sec per level 
+        worldRecord: 100.11 // 1:40.11 
+      },
+      { 
+        name: '1600m', 
+        distance: 1600, 
+        trainingLevel: 0, 
+        baseTime: 390.0, // 6:30.00 
+        improvement: 0.01 * (1600/100), // 0.16 sec per level 
+        worldRecord: 220.24 // 3:40.24 
+      },
+      { 
+        name: '3200m', 
+        distance: 3200, 
+        trainingLevel: 0, 
+        baseTime: 790.0, // 13:10.00 
+        improvement: 0.01 * (3200/100), // 0.32 sec per level 
+        worldRecord: 470.90 // 7:50.90 
+      }
     ];
     
     // Training cost increases with level.
@@ -159,11 +201,11 @@
       const competitionList = document.getElementById('competitionList');
       competitionList.innerHTML = '';
       events.forEach(event => {
-        // Calculate the predicted time based on training.
-        const predictedTime = Math.max(event.baseTime - event.trainingLevel * event.improvement, event.minTime);
+        // Calculate predicted time (no clamping—world record may be broken).
+        const predictedTime = event.baseTime - event.trainingLevel * event.improvement;
         const div = document.createElement('div');
         div.className = 'event';
-        div.innerHTML = `<span>${event.name}: Predicted Time: ${formatTime(predictedTime)}</span>`;
+        div.innerHTML = `<span>${event.name}: Predicted Time: ${formatTime(predictedTime)} | World Record: ${formatTime(event.worldRecord)}</span>`;
         competitionList.appendChild(div);
       });
     }
@@ -174,19 +216,28 @@
       let totalReward = 0;
       let resultText = '';
       events.forEach(event => {
-        const predictedTime = Math.max(event.baseTime - event.trainingLevel * event.improvement, event.minTime);
-        // Variation between 0.9 and 1.1
+        const predictedTime = event.baseTime - event.trainingLevel * event.improvement;
+        // Variation between 0.9 and 1.1 (±10%)
         const variation = 1 + (Math.random() - 0.5) / 5;
         const performance = predictedTime * variation;
         let reward = 0;
+        // Check for world record: if performance beats (is lower than) the current record.
+        let recordBroken = false;
+        if (performance < event.worldRecord) {
+          recordBroken = true;
+          // Update world record to this new performance.
+          event.worldRecord = performance;
+        }
+        // Reward logic: if performance is at or better than predicted, you win.
         if (performance <= predictedTime) {
-          // A win rewards more funds.
           reward = Math.round(100 * (event.distance / 100));
           resultText += `${event.name}: WIN! Time: ${formatTime(performance)} — Reward: $${reward}\n`;
         } else {
-          // A loss still gives a consolation prize.
           reward = Math.round(50 * (event.distance / 100));
           resultText += `${event.name}: Loss. Time: ${formatTime(performance)} — Consolation: $${reward}\n`;
+        }
+        if (recordBroken) {
+          resultText += `*** WORLD RECORD BROKEN in ${event.name}! New Record: ${formatTime(performance)} ***\n`;
         }
         totalReward += reward;
       });
