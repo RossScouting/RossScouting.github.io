@@ -41,6 +41,24 @@
             height: 100%;
             background: rgba(0, 0, 0, 0.5);
         }
+        .button[id=r1] {
+            background-color: red;
+        }
+        .button[id=r2] {
+            background-color: red;
+        }
+        .button[id=r3] {
+            background-color: red;
+        }
+        .button[id=b1] {
+            background-color: blue;
+        }
+        .button[id=b2] {
+            background-color: blue;
+        }
+        .button[id=b3] {
+            background-color: blue;
+        }
     </style>
 </head>
 <body>
@@ -49,15 +67,15 @@
     <div class="overlay" id="overlay"></div>
     
     <div class="popup" id="popup">
-        <h3>Enter Text</h3>
+        <h3>Menu</h3>
         <input type="text" id="textInput" placeholder="Type something...">
         <div class="buttons-container">
-            <button onclick="buttonClicked(1)">Button 1</button>
-            <button onclick="buttonClicked(2)">Button 2</button>
-            <button onclick="buttonClicked(3)">Button 3</button>
-            <button onclick="buttonClicked(4)">Button 4</button>
-            <button onclick="buttonClicked(5)">Button 5</button>
-            <button onclick="buttonClicked(6)">Button 6</button>
+            <button id="r1" onclick="buttonClicked(1)">Red 1</button>
+            <button id="r2" onclick="buttonClicked(2)">Red 2</button>
+            <button id="r3" onclick="buttonClicked(3)">Red 3</button>
+            <button id="b1" onclick="buttonClicked(1)">Blue 1</button>
+            <button id="b2" onclick="buttonClicked(2)">Blue 2</button>
+            <button id="b3" onclick="buttonClicked(3)">Blue 3</button>
         </div>
         <br>
         <button onclick="closePopup()">Close</button>
