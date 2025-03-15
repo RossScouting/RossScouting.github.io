@@ -8,22 +8,16 @@
 	<link href="https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,100;0,300;0,500;0,700;0,900;1,100;1,300;1,500;1,700;1,900&display=swap" rel="stylesheet">
 	<script src="https://kit.fontawesome.com/b5dbcb3331.js" crossorigin="anonymous"></script>
 	<style>
-
-		
-		*{
+		* {
 			margin: 0;
 			padding: 0;
 			font-family: 'Kanit', sans-serif;
 		}
-		.header{
-			/*min-height: 100vh;*/
-			width: 100%;
-			background-position: center;
-			background-size: cover;
+		.header {
+			background-color: black;
 			position: relative;
-      			background-color: black;
 		}
-		nav{
+		nav {
 			display: flex;
 			padding: 2% 6%;
 			justify-content: space-between;
@@ -33,10 +27,10 @@
 			top: 0;
 			z-index: 254;
 		}
-		nav img{
+		nav img {
 			width: 150px;
 		}
-		.logo-link::after{
+		.logo-link::after {
 			content: '';
 			width: 0%;
 			height: 2px;
@@ -45,25 +39,25 @@
 			margin: auto;
 			transition: 0.5s;
 		}
-		.logo-link:hover::after{
+		.logo-link:hover::after {
 			width: 100%;
 		}
-		.nav-links{
+		.nav-links {
 			flex: 1;
 			text-align: right;
 		}
-		.nav-links ul li{
+		.nav-links ul li {
 			list-style: none;
 			display: inline-block;
 			padding: 8px 12px;
 			position: relative;
 		}
-		.nav-links ul li a{
+		.nav-links ul li a {
 			color: #fff;
 			text-decoration: none;
 			font-size: 13px;
 		}
-		.nav-links ul li::after{
+		.nav-links ul li::after {
 			content: '';
 			width: 0%;
 			height: 2px;
@@ -72,54 +66,17 @@
 			margin: auto;
 			transition: 0.5s;
 		}
-		.nav-links ul li:hover::after{
+		.nav-links ul li:hover::after {
 			width: 100%;
 		}
-		.text-box{
-			width: 90%;
-			color: #fff;
-			position: absolute;
-			top: 50%;
-			left: 50%;
-			transform: translate(-50%,-50%);
-			text-align: center;
-		}
-		.text-box h1{
-			font-size: 62px;
-		}
-		.text-box p{
-			margin: 10px 0 40px;
-			font-size: 14px;
-			color: #fff;
-		}
-		.big-link{
-			display: inline-block;
-			text-decoration: none;
-			color: #fff;
-			border: 1px solid #fff;
-			padding: 12px 34px;
-			font-size: 13px;
-			background: transparent;
-			position: relative;
-			cursor: pointer;
-			transition: 1s;
-		}
-		.big-link:hover{
-			border: 1px solid #f44336;
-			background: #f44336;
-			transition: 1s;
-		}
-		nav .fa{
+		nav .fa {
 			display: none;
 		}
-		@media(max-width: 700px){
-			.text-box h1{
-				font-size: 20px;
-			}
-			.nav-links ul li{
+		@media(max-width: 700px) {
+			.nav-links ul li {
 				display: block;
 			}
-			.nav-links{
+			.nav-links {
 				display: none;
 				position: absolute;
 				background: #f44336;
@@ -131,62 +88,90 @@
 				z-index: 2;
 				transition: 1s;
 			}
-			nav .fa{
+			nav .fa {
 				display: block;
 				color: #fff;
 				margin: 10px;
 				font-size: 22px;
 				cursor: pointer;
 			}
-			.nav-links ul{
+			.nav-links ul {
 				padding: 30px;
 			}
 		}
 
+		/* ---------------- Grid Content Layout ---------------- */
 		.content {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        grid-template-rows: auto auto auto;
-        gap: 10px;
-        padding: 20px;
-        color: black;
+			display: grid;
+			grid-template-columns: 1fr 1fr;
+			/* Set fixed heights for the rows you want uniform */
+			grid-template-rows: 200px 150px auto;
+			gap: 10px;
+			padding: 20px;
+			background-color: #f4f4f4; /* For visibility */
 		}
 
-		.iframe-container {
+		/* First Row: Left = iframe, Right = Info (title + links) */
+		.iframe1-container {
 			grid-column: 1;
-		
 		}
-
-		.iframe1 { height: 300px; width: 100%; }
-		.iframe2 { height: 300px; width: 100%; }
-
+		.iframe1 {
+			width: 100%;
+			height: 100%;
+			border: none;
+		}
+		.info-container {
+			grid-column: 2;
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			height: 200px; /* Same height as the iframe container */
+		}
 		.title {
-			grid-column: 2;
 			font-size: 24px;
-			text-align: left;
+			margin-bottom: 10px;
+			color: #333;
+		}
+		.links ul {
+			list-style: none;
+			margin: 0;
+			padding: 0;
+		}
+		.links ul li {
+			margin-bottom: 5px;
+		}
+		.links ul li a {
+			text-decoration: none;
+			color: #007BFF;
 		}
 
-		.links {
-			grid-column: 2;
+		/* Second Row: Full-width iframe */
+		.iframe2-container {
+			grid-column: 1 / span 2;
+		}
+		.iframe2 {
+			width: 100%;
+			height: 100%;
+			border: none;
 		}
 
-		.links ul { list-style: none; }
-		.links ul li a { text-decoration: none; color: black; }
-
+		/* Third Row: Image Container */
 		.image-container {
-			grid-column: span 2;
+			grid-column: 1 / span 2;
 			display: flex;
 			justify-content: space-around;
+			padding: 10px 0;
 		}
-
-		.image-container img { width: 100px; height: auto; }
+		.image-container img {
+			width: 100px;
+			height: auto;
+		}
 	</style>
 </head>
 <body>
 	<section class="header">
-
 		<nav>
-			<a href="index.html" class="logo-link"><img src="images/logo.png"></a>
+			<a href="index.html" class="logo-link"><img src="images/logo.png" alt="Logo"></a>
 			<div class="nav-links" id="navLinks">
 				<i class="fa fa-times" onclick="moveMenuOut()"></i>
 				<ul>
@@ -201,29 +186,37 @@
 			<i class="fa fa-bars" onclick="showMenu()"></i>
 		</nav>
 	</section>
+
 	<section class="content">
-        <div class="iframe-container">
-            <iframe src="https://www.statbotics.io/event/2025ohmv#insights" class="iframe1"></iframe>
-        </div>
-        <div class="title">Scouting Tools:</div>
-        <div class="links">
-            <ul>
-                <li><a href="https://docs.google.com/spreadsheets/d/1BosiRkL1VHl4D_niBkwJp-jnVDPXk9cAHqY6CVsin4c/edit?pli=1&gid=1348123314#gid=1348123314">Dashboard</a></li>
-                <li><a href="https://www.statbotics.io/event/2025ohmv#insights">Statbotics</a></li>
-                <li><a href="https://www.thebluealliance.com/event/2025ohmv">The Blue Alliance</a></li>
-                <li><a href="https://docs.google.com/spreadsheets/d/1BosiRkL1VHl4D_niBkwJp-jnVDPXk9cAHqY6CVsin4c/edit?pli=1&gid=96792252#gid=96792252">Input *Lead Scouts Only*</a></li>
-                <li><a href="https://docs.google.com/spreadsheets/d/1BosiRkL1VHl4D_niBkwJp-jnVDPXk9cAHqY6CVsin4c/edit?pli=1&gid=453470357#gid=453470357">Auto Input *Lead Scouts Only*</a></li>
-                <li><a href="https://docs.google.com/spreadsheets/d/1BosiRkL1VHl4D_niBkwJp-jnVDPXk9cAHqY6CVsin4c/edit?pli=1&gid=512345279#gid=512345279">Team List *Lead Scouts Only</a></li>
-                <li><a href="https://docs.google.com/spreadsheets/d/1BosiRkL1VHl4D_niBkwJp-jnVDPXk9cAHqY6CVsin4c/edit?pli=1&gid=1731105768#gid=1731105768">More Info</a></li>
-            </ul>
-        </div>
-        <div class="iframe-container">
-            <iframe src="https://www.thebluealliance.com/event/2025ohmv" class="iframe2"></iframe>
-        </div>
-        <div class="image-container">
-            <img src="images/img1.png" alt="Image 1" class="img1">
-            <img src="images/img2.png" alt="Image 2" class="img2">
-        </div>
-    </section>
+		<!-- Row 1: Iframe 1 & Info Container -->
+		<div class="iframe1-container">
+			<iframe src="https://www.statbotics.io/event/2025ohmv#insights" class="iframe1"></iframe>
+		</div>
+		<div class="info-container">
+			<div class="title">Scouting Tools:</div>
+			<div class="links">
+				<ul>
+					<li><a href="https://docs.google.com/spreadsheets/d/1BosiRkL1VHl4D_niBkwJp-jnVDPXk9cAHqY6CVsin4c/edit?pli=1&gid=1348123314">Dashboard</a></li>
+					<li><a href="https://www.statbotics.io/event/2025ohmv#insights">Statbotics</a></li>
+					<li><a href="https://www.thebluealliance.com/event/2025ohmv">The Blue Alliance</a></li>
+					<li><a href="https://docs.google.com/spreadsheets/d/1BosiRkL1VHl4D_niBkwJp-jnVDPXk9cAHqY6CVsin4c/edit?pli=1&gid=96792252">Input *Lead Scouts Only*</a></li>
+					<li><a href="https://docs.google.com/spreadsheets/d/1BosiRkL1VHl4D_niBkwJp-jnVDPXk9cAHqY6CVsin4c/edit?pli=1&gid=453470357">Auto Input *Lead Scouts Only*</a></li>
+					<li><a href="https://docs.google.com/spreadsheets/d/1BosiRkL1VHl4D_niBkwJp-jnVDPXk9cAHqY6CVsin4c/edit?pli=1&gid=512345279">Team List *Lead Scouts Only*</a></li>
+					<li><a href="https://docs.google.com/spreadsheets/d/1BosiRkL1VHl4D_niBkwJp-jnVDPXk9cAHqY6CVsin4c/edit?pli=1&gid=1731105768">More Info</a></li>
+				</ul>
+			</div>
+		</div>
+
+		<!-- Row 2: Full-Width Iframe 2 -->
+		<div class="iframe2-container">
+			<iframe src="https://www.thebluealliance.com/event/2025ohmv" class="iframe2"></iframe>
+		</div>
+
+		<!-- Row 3: Image Container -->
+		<div class="image-container">
+			<img src="images/img1.png" alt="Image 1" class="img1">
+			<img src="images/img2.png" alt="Image 2" class="img2">
+		</div>
+	</section>
 </body>
 </html>
