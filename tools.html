@@ -102,35 +102,15 @@
 
 		/* ---------------- Grid Content Layout ---------------- */
 		.content {
-			display: grid;
-			grid-template-columns: 1fr 1fr;
-			/* Set fixed heights for the rows you want uniform */
-			grid-template-rows: 200px 150px auto;
 			gap: 10px;
 			padding: 20px;
-			background-color: #f4f4f4; /* For visibility */
+			background-color: black; /* For visibility */
 		}
 
-		/* First Row: Left = iframe, Right = Info (title + links) */
-		.iframe1-container {
-			grid-column: 1;
-		}
-		.iframe1 {
-			width: 100%;
-			height: 100%;
-			border: none;
-		}
-		.info-container {
-			grid-column: 2;
-			display: flex;
-			flex-direction: column;
-			justify-content: center;
-			height: 200px; /* Same height as the iframe container */
-		}
 		.title {
 			font-size: 24px;
 			margin-bottom: 10px;
-			color: black;
+			color: white;
 		}
 		.links ul {
 			list-style: none;
@@ -142,29 +122,7 @@
 		}
 		.links ul li a {
 			text-decoration: none;
-			color: black;
-		}
-
-		/* Second Row: Full-width iframe */
-		.iframe2-container {
-			grid-column: 1 / span 2;
-		}
-		.iframe2 {
-			width: 50%;
-			height: 100%;
-			border: none;
-		}
-
-		/* Third Row: Image Container */
-		.image-container {
-			grid-column: 1 / span 2;
-			display: flex;
-			justify-content: space-around;
-			padding: 10px 0;
-		}
-		.image-container img {
-			width: 100px;
-			height: auto;
+			color: white;
 		}
 	</style>
 </head>
@@ -188,11 +146,6 @@
 	</section>
 
 	<section class="content">
-		<!-- Row 1: Iframe 1 & Info Container -->
-		<div class="iframe1-container">
-			<iframe src="https://www.statbotics.io/event/2025ohmv#insights" class="iframe1"></iframe>
-		</div>
-		<div class="info-container">
 			<div class="title">Scouting Tools:</div>
 			<div class="links">
 				<ul>
@@ -205,18 +158,6 @@
 					<li><a href="https://docs.google.com/spreadsheets/d/1BosiRkL1VHl4D_niBkwJp-jnVDPXk9cAHqY6CVsin4c/edit?pli=1&gid=1731105768">More Info</a></li>
 				</ul>
 			</div>
-		</div>
-
-		<!-- Row 2: Full-Width Iframe 2 -->
-		<div class="iframe2-container">
-			<iframe src="https://www.thebluealliance.com/event/2025ohmv" class="iframe2"></iframe>
-		</div>
-
-		<!-- Row 3: Image Container -->
-		<div class="image-container">
-			<img src="images/img1.png" alt="Image 1" class="img1">
-			<img src="images/img2.png" alt="Image 2" class="img2">
-		</div>
 	</section>
 </body>
 </html>
