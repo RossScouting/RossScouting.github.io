@@ -142,6 +142,44 @@
 				padding: 30px;
 			}
 		}
+
+		.content {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: auto auto auto;
+        gap: 10px;
+        padding: 20px;
+        color: blue;
+		}
+
+		.iframe-container {
+			grid-column: 1;
+		
+		}
+
+		.iframe1 { height: 200px; width: 100%; }
+		.iframe2 { height: 150px; width: 100%; }
+
+		.title {
+			grid-column: 2;
+			font-size: 24px;
+			text-align: left;
+		}
+
+		.links {
+			grid-column: 2;
+		}
+
+		.links ul { list-style: none; }
+		.links ul li a { text-decoration: none; color: blue; }
+
+		.image-container {
+			grid-column: span 2;
+			display: flex;
+			justify-content: space-around;
+		}
+		
+		.image-container img { width: 100px; height: auto; }
 	</style>
 </head>
 <body>
@@ -162,7 +200,32 @@
 			</div>
 			<i class="fa fa-bars" onclick="showMenu()"></i>
 		</nav>
-		<iframe width="100%" height="1000" src="https://script.google.com/macros/s/AKfycbyWb1pSjAUTXJnUQ_SW4SJhv296ma7gaCOOg66nnf7VFMUsKec4QQG-QBTjQYhiBten/exec"></iframe>	
 	</section>
+	<section class="content">
+        <div class="iframe-container">
+            <iframe src="about:blank" class="iframe1"></iframe>
+        </div>
+        <div class="title">Title</div>
+        <div class="links">
+            <ul>
+                <li><a href="#">Link 1</a></li>
+                <li><a href="#">Link 2</a></li>
+                <li><a href="#">Link 3</a></li>
+                <li><a href="#">Link 4</a></li>
+                <li><a href="#">Link 5</a></li>
+                <li><a href="#">Link 6</a></li>
+                <li><a href="#">Link 7</a></li>
+                <li><a href="#">Link 8</a></li>
+                <li><a href="#">Link 9</a></li>
+            </ul>
+        </div>
+        <div class="iframe-container">
+            <iframe src="about:blank" class="iframe2"></iframe>
+        </div>
+        <div class="image-container">
+            <img src="images/img1.png" alt="Image 1" class="img1">
+            <img src="images/img2.png" alt="Image 2" class="img2">
+        </div>
+    </section>
 </body>
 </html>
