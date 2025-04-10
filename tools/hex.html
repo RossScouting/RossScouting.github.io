@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hex Converter</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      align-items: center;
+      background-image: url(https://rossscouting.github.io/images/Untitled%20design.gif); 
+      color: white; 
+      margin: auto; 
+      width: 75%; 
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <h1>Hex Converter</h1>
+  Text: <input type="text"  id="tfh" />
+  <script>
+    function stringToHex(str) {
+      let hex = '';
+      for (let i = 0; i < str.length; i++) {
+        const charCode = str.charCodeAt(i);
+        const hexValue = charCode.toString(16);
+        hex += ('00' + hexValue).slice(-2);
+      }
+      return hex;
+    }
+
+    const text = "Hello, World!";
+    const hexText = stringToHex(text);
+    console.log(hexText);
+  </script>
+</body>
+</html>
