@@ -18,8 +18,20 @@
 </head>
 <body>
   <h1>Hex Converter</h1>
-  Text: <input type="text"  id="tfh" size="3201"/>
+  Text: <textarea id="chemreview" rows="4" cols="50"></textarea>
+  <p></p>
+  <input type="button" id="submit" value="Submit" onclick="submit()">
+  <p></p>
+  <p id="transhex"></p>
   <script>
+    function submit() {
+      var text = document.getElementById("chemreview").value;
+      var hexText = stringToHex(text);
+
+      var Paragraph = document.getElementById("transhex");
+      Paragraph.value = hexText;
+    }
+
     function stringToHex(str) {
       let hex = '';
       for (let i = 0; i < str.length; i++) {
@@ -29,10 +41,6 @@
       }
       return hex;
     }
-
-    const text = "Hello, World!";
-    const hexText = stringToHex(text);
-    console.log(hexText);
   </script>
 </body>
 </html>
