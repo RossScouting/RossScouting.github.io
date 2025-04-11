@@ -26,21 +26,10 @@
   <script>
     function submit() {
       var text = document.getElementById("chemreview").value;
-      var hexText = stringToHex(text);
+      var hexText = text.toString(16);
 
       var Paragraph = document.getElementById("transhex");
       Paragraph.value = hexText;
-    }
-
-    function stringToHex(str) {
-      let hex = '';
-      for (let i = 0; i < str.length; i++) {
-        const charCode = str.charCodeAt(i);
-        const hexString = charCode.toString(16);
-        const paddedHexString = hexString.padStart(2, '0'); // Ensure two-digit representation
-        hex += paddedHexString;
-      }
-      return hex;
     }
   </script>
 </body>
