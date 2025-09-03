@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Ross Rambotics Scouting</title>
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,100;0,300;0,500;0,700;0,900;1,100;1,300;1,500;1,700;1,900&display=swap" rel="stylesheet">
+	<script src="https://kit.fontawesome.com/b5dbcb3331.js" crossorigin="anonymous"></script>
+	<style>
+		* {
+			margin: 0;
+			padding: 0;
+			font-family: 'Kanit', sans-serif;
+		}
+		.header {
+			background-color: black;
+			position: relative;
+		}
+		.body {
+			background-color: black;
+		}
+		nav {
+			display: flex;
+			padding: 2% 6%;
+			justify-content: space-between;
+			align-items: center;
+			background-color: #0d0d0d;
+			position: sticky;
+			top: 0;
+			z-index: 254;
+		}
+		nav img {
+			width: 150px;
+		}
+		.logo-link::after {
+			content: '';
+			width: 0%;
+			height: 2px;
+			background: #ffee00;
+			display: block;
+			margin: auto;
+			transition: 0.5s;
+		}
+		.logo-link:hover::after {
+			width: 100%;
+		}
+		.nav-links {
+			flex: 1;
+			text-align: right;
+		}
+		.nav-links ul li {
+			list-style: none;
+			display: inline-block;
+			padding: 8px 12px;
+			position: relative;
+		}
+		.nav-links ul li a {
+			color: #fff;
+			text-decoration: none;
+			font-size: 13px;
+		}
+		.nav-links ul li::after {
+			content: '';
+			width: 0%;
+			height: 2px;
+			background: #f44336;
+			display: block;
+			margin: auto;
+			transition: 0.5s;
+		}
+		.nav-links ul li:hover::after {
+			width: 100%;
+		}
+		nav .fa {
+			display: none;
+		}
+		@media(max-width: 700px) {
+			.nav-links ul li {
+				display: block;
+			}
+			.nav-links {
+				display: none;
+				position: absolute;
+				background: #f44336;
+				height: 100vh;
+				width: 200px;
+				top: 0;
+				right: -200px;
+				text-align: left;
+				z-index: 2;
+				transition: 1s;
+			}
+			nav .fa {
+				display: block;
+				color: #fff;
+				margin: 10px;
+				font-size: 22px;
+				cursor: pointer;
+			}
+			.nav-links ul {
+				padding: 30px;
+			}
+		}
+
+		/* ---------------- Grid Content Layout ---------------- */
+		.content {
+			gap: 10px;
+			padding: 20px;
+			background-color: black; /* For visibility */
+			min-height: 800px;
+		}
+
+		.title {
+			font-size: 24px;
+			margin-bottom: 10px;
+			color: white;
+		}
+		.links ul {
+			list-style: none;
+			margin: 0;
+			padding: 0;
+		}
+		.links ul li {
+			margin-bottom: 5px;
+		}
+		.links ul li a {
+			text-decoration: none;
+			color: white;
+		}
+	</style>
+</head>
+<body>
+	<section class="header">
+		<nav>
+			<a href="index.html" class="logo-link"><img src="images/logo.png" alt="Logo"></a>
+			<div class="nav-links" id="navLinks">
+				<i class="fa fa-times" onclick="moveMenuOut()"></i>
+				<ul>
+					<li><a href="index.html">HOME</a></li>
+					<li><a href="input.html">SCOUTING</a></li>
+					<li><a href="leaderboard.html">LEADERBOARD</a></li>
+					<li><a href="tracker.html">TRACKER</a></li>
+					<li><a href="auto.html">AUTO-START</a></li>
+					<li><a href="tools.html">TOOLS</a></li>
+				</ul>
+			</div>
+			<i class="fa fa-bars" onclick="showMenu()"></i>
+		</nav>
+	</section>
+
+	<section class="content">
+			<div class="title">Scouting Tools:</div>
+			<div class="links">
+				<ul>
+					<li><a href="https://docs.google.com/spreadsheets/d/1BosiRkL1VHl4D_niBkwJp-jnVDPXk9cAHqY6CVsin4c/edit?pli=1&gid=1348123314">Dashboard</a></li>
+					<li><a href="https://www.statbotics.io/event/2025ohmv#insights">Statbotics</a></li>
+					<li><a href="https://www.thebluealliance.com/event/2025ohmv">The Blue Alliance</a></li>
+					<li><a href="https://docs.google.com/spreadsheets/d/1BosiRkL1VHl4D_niBkwJp-jnVDPXk9cAHqY6CVsin4c/edit?pli=1&gid=96792252">Input *Lead Scouts Only*</a></li>
+					<li><a href="https://docs.google.com/spreadsheets/d/1BosiRkL1VHl4D_niBkwJp-jnVDPXk9cAHqY6CVsin4c/edit?pli=1&gid=453470357">Auto Input *Lead Scouts Only*</a></li>
+					<li><a href="https://docs.google.com/spreadsheets/d/1BosiRkL1VHl4D_niBkwJp-jnVDPXk9cAHqY6CVsin4c/edit?pli=1&gid=512345279">Team List *Lead Scouts Only*</a></li>
+					<li><a href="https://docs.google.com/spreadsheets/d/1BosiRkL1VHl4D_niBkwJp-jnVDPXk9cAHqY6CVsin4c/edit?pli=1&gid=1731105768">More Info</a></li>
+				</ul>
+			</div>
+	</section>
+</body>
+</html>

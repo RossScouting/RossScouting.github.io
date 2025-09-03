@@ -144,11 +144,11 @@
 		}
 	</style>
 </head>
-<body>
+<body onload="Warning()">
 	<section class="header">
 
 		<nav>
-			<a href="index.html" class="logo-link"><img src="logo.png"></a>
+			<a href="index.html" class="logo-link"><img src="images/logo.png"></a>
 			<div class="nav-links" id="navLinks">
 				<i class="fa fa-times" onclick="moveMenuOut()"></i>
 				<ul>
@@ -156,13 +156,18 @@
 					<li><a href="input.html">SCOUTING</a></li>
 					<li><a href="leaderboard.html">LEADERBOARD</a></li>
 					<li><a href="tracker.html">TRACKER</a></li>
-					<li><a href="specinput.html">AUTO-START</a></li>
-					<li><a href="auto.html">AUTO-NOTE</a></li>
+					<li><a href="auto.html">AUTO-START</a></li>
+					<li><a href="tools.html">TOOLS</a></li>
 				</ul>
 			</div>
 			<i class="fa fa-bars" onclick="showMenu()"></i>
 		</nav>
-		<iframe width="100%" height="1000" src="https://script.google.com/macros/s/AKfycbyhSa6WEgeTdjNqw_blzEWyp36dC0d54VroHSK9tWBAlhEwudXKyW7QberKSJZGXxfk/exec"></iframe>	
+		<iframe width="100%" height="1000" src="https://script.google.com/macros/s/AKfycbxl-usEiXi1Qlx6HD3cPHDi1t4e3aoGQ9IqIhwmLBwp8xDVqZlrC86OOlYJ68Q9O94/exec"></iframe>	
 	</section>
+	<script>
+		function Warning(){
+			alert("This is the wrong input if you are trying to scout a robot. This is used by scout leads only. If you are not a scout lead, click SCOUTING on the top of the page.");
+		}
+	</script>
 </body>
 </html>

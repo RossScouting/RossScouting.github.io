@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hex Converter</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      align-items: center;
+      background-image: url(https://rossscouting.github.io/images/Untitled%20design.gif); 
+      color: white; 
+      margin: auto; 
+      width: 75%; 
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <h1>Hex Converter</h1>
+  Text: <textarea id="chemreview" rows="4" cols="50"></textarea>
+  <p></p>
+  <input type="button" id="submit" value="Submit" onclick="submit()">
+  <p></p>
+  <p id="transhex"></p>
+  <script>
+    function submit() {
+      var text = document.getElementById("chemreview").value;
+      var hexText = text.toString(16);
+
+      var Paragraph = document.getElementById("transhex");
+      Paragraph.value = hexText;
+    }
+  </script>
+</body>
+</html>
